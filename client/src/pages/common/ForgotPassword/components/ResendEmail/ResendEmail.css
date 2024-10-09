@@ -1,0 +1,16 @@
+.forgot-password .user-resend-email .btn {
+    margin-top: 21px;
+}
+
+.forgot-password .user-resend-email .navigation-1 {
+    margin-top: 15px;
+}
+
+.forgot-password .user-resend-email .navigation-2 {
+    margin-top: 60px;
+}
+
+.forgot-password .user-resend-email .back-link {
+    color: #0000EE;
+    cursor: pointer;
+}
