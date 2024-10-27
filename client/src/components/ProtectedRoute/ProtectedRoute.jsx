@@ -4,7 +4,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { isAuthenticated, verifyAuthorization } from '../../utils/authUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserInfo } from '../../redux/userSlice.js';
-// import Sidebar from '../Sidebar/Sidebar.jsx';
+import Sidebar from '../Sidebar/Sidebar.jsx';
 import Unauthorized from '../../pages/common/Unauthorized/Unauthorized.jsx';
 
 const ProtectedRoute = ({ children, showSidebar, ...rest }) => {
@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children, showSidebar, ...rest }) => {
 
     return isAuth ? (
         <div className='page'>
-            {/* {(showSidebar && user) && <Sidebar />} */}
+            {(showSidebar && user) && <Sidebar />}
             {isAuthorized === 'pending' ?
                 <div className='content'></div>
                 :

@@ -2,7 +2,8 @@ import Login from '../pages/common/Login/Login.jsx';
 import Register from '../pages/common/Register/Register.jsx';
 import ForgotPassword from '../pages/common/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from '../pages/common/ResetPassword/ResetPassword.jsx';
-import AuthenticatedRedirect from '../components/AuthenticatedRedirect/AuthenticatedRedirect.jsx';
+import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
+import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 
@@ -19,10 +20,8 @@ const routes = [
   // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
 
   //company
-  // { path: "/company/login", element: <AuthenticatedRedirect><StaffLogin /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/company/forgot-password", element: <AuthenticatedRedirect><StaffForgetPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/company/reset-password", element: <AuthenticatedRedirect><StaffResetPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  // { path: "/company/common/users", element: <StaffUsers />, protected: true, showSidebar: true },
+  { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
   // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
 
   //admin
@@ -32,10 +31,11 @@ const routes = [
   // { path: "/company/admin/settings", element: <AdminSettings />, protected: true, showSidebar: true },
 
   //common
-  { path: "/login", element: <AuthenticatedRedirect><Login /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  { path: "/register", element: <AuthenticatedRedirect><Register /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  { path: "/forgot-password", element: <AuthenticatedRedirect><ForgotPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
-  { path: "/reset-password", element: <AuthenticatedRedirect><ResetPassword /></AuthenticatedRedirect>, protected: false, showSidebar: false },
+  { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },
+  { path: "/login", element: <Login />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/register", element: <Register />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/forgot-password", element: <ForgotPassword />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/reset-password", element: <ResetPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "*", element: <NotFound />, protected: false, showSidebar: false },
 ];
 

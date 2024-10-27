@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-// import { menuItems } from '../constants/menuItems';
+import { menuItems } from '../constants/menuItems';
 
 const isAuthenticated = () => {
     const token = Cookies.get('adstatixx-jwt-token');
@@ -19,6 +19,9 @@ const verifyAuthorization = (role) => {
     // } else if (currentPath === '' || currentPath === '/company') {
     //     return true;
     // }
+    if (currentPath === '') {
+        return true;
+    }
     const allowedPages = menuItems[role]?.map(item => item.path) || [];
 
     return allowedPages.includes(currentPath);

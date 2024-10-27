@@ -9,8 +9,8 @@
 }
 
 .margin-content {
-  width: calc(100% - 288px);
-  margin-left: 288px;
+  width: calc(100% - 225px);
+  margin-left: 225px;
   padding: 60px 40px;
   box-sizing: border-box;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Sidebar.css';
 import { useLocation, Link } from 'react-router-dom';
-import LogoIcon from '../../assets/icons/logo.svg?react';
+import LogoImage from '../../assets/images/logo.png';
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiMenuAltRight } from "react-icons/bi";
@@ -18,7 +18,6 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const sidebarRef = useRef(null);
     const { user } = useSelector(state => state.user);
-    const { companyInfo } = useSelector(state => state.companyInfo);
     const items = menuItems[user?.role] || [];
     const location = useLocation();
     const dispatch = useDispatch();
@@ -47,7 +46,7 @@ const Sidebar = () => {
         dispatch(ShowLoading());
         try {
             await userService.logoutUser({});
-            Cookies.remove('pondus-jwt-token');
+            Cookies.remove('adstatixx-jwt-token');
             dispatch(setLoggedOut());
             dispatch(clearUser());
         } catch (error) {
@@ -76,12 +75,7 @@ const Sidebar = () => {
                     />
                 </div>
                 <div className="logo">
-                    {user?.role !== 'user' ?
-                        <LogoIcon className="logo-icon" />
-                        :
-                        <img src={companyInfo?.logo} style={{ width: '50px', height: '50px' }} alt='Gym Logo' />
-                    }
-                    <div className="logo-text">{user.role !== 'user' ? "Pondus" : companyInfo?.name}</div>
+                    <img src={LogoImage} className="logo-image" />
                 </div>
                 <div className='menu'>
                     {items.map((item) => (
