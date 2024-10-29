@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Sidebar.css';
 import { useLocation, Link } from 'react-router-dom';
-import LogoImage from '../../assets/images/logo.png';
+import LogoImage from '../../assets/images/logo.svg';
 import LogoutIcon from '../../assets/icons/logout_icon.svg?react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiMenuAltRight } from "react-icons/bi";
@@ -78,19 +78,22 @@ const Sidebar = () => {
                     <img src={LogoImage} className="logo-image" />
                 </div>
                 <div className='menu'>
+
+                    <p style={{ color: "white", margin: "auto" }}>Campaign Manager</p>
+
                     {items.map((item) => (
                         <div key={item.path} className={`item ${location.pathname === item.path ? 'active-item' : 'non-active-item'}`}>
                             {item.disabled ?
                                 <>
                                     <div className='item-link'>
-                                        {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })}
+                                        {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
                                         <div className='item-label disabled-label'>{item.label}</div>
                                     </div>
                                 </>
                                 :
                                 <>
                                     <Link to={item.path} className='item-link' onClick={handlePageChange}>
-                                        {React.cloneElement(item.icon, { width: 30, height: 30, opacity: item.disabled ? 0.3 : 1 })}
+                                        {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
                                         <div className='item-label'>{item.label}</div>
                                     </Link>
                                 </>

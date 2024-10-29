@@ -1,0 +1,86 @@
+.campaign-form {
+    margin: 50px;
+  }
+  
+  .steps {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .step {
+    position: relative;
+    padding-bottom: 10px;
+    color: #bfbfbf;
+    font-weight: bold;
+  }
+
+  .step span{
+   background-color: #6AB541; 
+  }
+  
+  .step.active {
+    color: #4caf50;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d4e4cc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  textarea {
+    resize: none;
+    height: 80px;
+  }
+  
+  .character-count {
+    text-align: right;
+    color: #bfbfbf;
+    font-size: 14px;
+  }
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  .upload-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f0f8e0;
+    color: #4caf50;
+    border: 1px solid #d4e4cc;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .proceed-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .proceed-btn:hover {
+    background-color: #45a049;
+  }
+  
