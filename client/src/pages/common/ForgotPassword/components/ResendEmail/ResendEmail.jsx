@@ -7,8 +7,10 @@ const ResendEmail = ({ handleReset, setView }) => {
     return (
         <div className="user-resend-email auth-form">
             <div className="title">Check your e-mail</div>
-            <div className="description">You should have received instructions on how to recover your account through the e-mail you’ve provided</div>
-            <div className="input-form">
+            <div className="description">
+                You should have received instructions on how to recover your account through the e-mail you’ve provided
+            </div>
+            <div className="">
                 <button className='btn' onClick={handleReset}>Resend E-mail</button>
             </div>
             <div className='navigation navigation-1'>
@@ -20,7 +22,7 @@ const ResendEmail = ({ handleReset, setView }) => {
                 <Link to='/login' className='nav-link'>Log in here</Link>
             </div>
         </div>
-    )
+    );
 };
 
 export default ResendEmail;

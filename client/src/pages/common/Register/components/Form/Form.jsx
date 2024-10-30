@@ -147,7 +147,7 @@ const Form = ({ type }) => {
         try {
             const response = await userService.registerUser(formattedData, type);
             message.success(response?.message);
-            navigate('/login');
+            navigate('/verify-otp');
         } catch (error) {
             message.error(error.response.data?.error);
         } finally {

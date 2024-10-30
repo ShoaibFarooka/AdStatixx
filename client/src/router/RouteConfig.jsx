@@ -7,6 +7,7 @@ import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
 import AddCampaigns from '../pages/company/Campaigns/components/AddCampaign.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
+import Verify from '../pages/common/VerifyOTP/Verify.jsx';
 
 const routes = [
   //user
@@ -37,6 +38,7 @@ const routes = [
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },
   { path: "/login", element: <Login />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/register", element: <Register />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/verify-otp", element: <Verify />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/forgot-password", element: <ForgotPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/reset-password", element: <ResetPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "*", element: <NotFound />, protected: false, showSidebar: false },

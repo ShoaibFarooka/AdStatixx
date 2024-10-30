@@ -14,3 +14,31 @@
     color: #0000EE;
     cursor: pointer;
 }
+
+.otp-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.otp-input {
+    width: 30px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.5em;
+    border: 1px solid #ccc;
+    border-radius: 20px !important;
+}
+
+.verify-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.verify-btn:hover {
+    background-color: #45a049;
+}
