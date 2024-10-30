@@ -82,24 +82,27 @@ const Sidebar = () => {
                     <p style={{ color: "white", margin: "auto" }}>Campaign Manager</p>
 
                     {items.map((item) => (
-                        <div key={item.path} className={`item ${location.pathname === item.path ? 'active-item' : 'non-active-item'}`}>
-                            {item.disabled ?
-                                <>
-                                    <div className='item-link'>
-                                        {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
-                                        <div className='item-label disabled-label'>{item.label}</div>
-                                    </div>
-                                </>
-                                :
-                                <>
-                                    <Link to={item.path} className='item-link' onClick={handlePageChange}>
-                                        {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
-                                        <div className='item-label'>{item.label}</div>
-                                    </Link>
-                                </>
-                            }
+                        <div
+                            key={item.path}
+                            className={`item ${location.pathname === item.path || (item.path === "/company/campaigns" && location.pathname.includes("/company/campaigns"))
+                                    ? 'active-item'
+                                    : 'non-active-item'
+                                }`}
+                        >
+                            {item.disabled ? (
+                                <div className='item-link'>
+                                    {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
+                                    <div className='item-label disabled-label'>{item.label}</div>
+                                </div>
+                            ) : (
+                                <Link to={item.path} className='item-link' onClick={handlePageChange}>
+                                    {React.cloneElement(item.icon, { width: 20, height: 20, opacity: item.disabled ? 0.3 : 1 })}
+                                    <div className='item-label'>{item.label}</div>
+                                </Link>
+                            )}
                         </div>
                     ))}
+
                     <div className={`item non-active-item`} onClick={handleLogout}>
                         <div className='item-link'>
                             <LogoutIcon width='30' height='30' />

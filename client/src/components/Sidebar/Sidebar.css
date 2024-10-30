@@ -90,14 +90,14 @@
     .sidebar-wrapper .hamburger-container {
         position: fixed;
         width: 100%;
-        background-color: aliceblue;
+        background-color: #6AB541;
         display: flex;
         align-items: center;
         padding: 10px 15px;
     }
 
     .sidebar {
-        background-color: aliceblue;
+        background-color: #6AB541;
         z-index: 1;
         transition: width 0.4s ease, opacity 0.4s ease;
     }
@@ -111,6 +111,8 @@
     .sidebar-opened {
         width: 250px;
         opacity: 1;
+        z-index: +11;
+        background-color: #6AB541;
     }
 
     .sidebar .hamburger-close-container {

@@ -1,90 +1,94 @@
-import { useState } from "react";
-import plan from "../../../assets/images/company.svg"
 import "./Campaigns.css"
-import tick from "../../../assets/icons/tick.svg"
+import plan from "../../../assets/images/company.svg"
+import { useState } from "react";
+import edit from "../../../assets/icons/edit.svg";
+import deleteIcon from "../../../assets/icons/delete.svg"
+import { useNavigate } from "react-router-dom";
 
 const Campaigns = () => {
-    const [campaignName, setCampaignName] = useState('');
-    const [description, setDescription] = useState('');
-    const [caption, setCaption] = useState('');
-    const [image, setImage] = useState(null);
+    const [campaigns, setCampaigns] = useState([
+        { name: "Lindsey Stroud", budget: 200, duration: "7 Days a week", views: 45, active: true },
+        { name: "Sarah Brown", budget: 100, duration: "7 Days a week", views: 2000, active: true },
+        { name: "Micheal Owen", budget: 100, duration: "7 Days a week", views: 45, active: true },
+        { name: "Mary Jane", budget: 200, duration: "7 Days a week", views: 45, active: true },
+        { name: "Peter Dodle", budget: 200, duration: "7 Days a week", views: 45, active: true },
+        { name: "Peter Dodle", budget: 100, duration: "7 Days a week", views: 45, active: true },
+        { name: "Peter Dodle", budget: 100, duration: "7 Days a week", views: 45, active: true },
+        { name: "Peter Dodle", budget: 300, duration: "7 Days a week", views: 45, active: true },
+    ]);
 
-    const handleImageUpload = (e) => {
-        setImage(e.target.files[0]);
+    const toggleCampaign = (index) => {
+        setCampaigns((prev) =>
+            prev.map((campaign, i) =>
+                i === index ? { ...campaign, active: !campaign.active } : campaign
+            )
+        );
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log({ campaignName, description, caption, image });
+    const deleteCampaign = (index) => {
+        setCampaigns((prev) => prev.filter((_, i) => i !== index));
     };
+
+    const navigate = useNavigate()
 
     return (
-        <div className="table">
-            <div className="heading">
-                <img src={plan} alt="plan" />
+        <div className="dashboard">
 
-                <span>Add Campaigns</span>
+            <div
+                onClick={() => navigate("/company/campaigns-add")}
+                className="bg-[#6AB541] text-white w-[180px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer"
+            >
+                Create Campaign +
             </div>
 
-            <div className="campaign-form">
-                <div className="steps">
-                    <div className="step active">
-                        <p>Step 1</p>
+            <div className="table">
+                <div className="heading">
+                    <img src={plan} alt="plan" />
 
-                        <span>
-                        <img src={tick} alt="tick" />
-                        </span>
-                    </div>
-                    <div className="step">Step 2</div>
-                    <div className="step">Step 3</div>
+                    <span>Campaigns</span>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Campaign Name</label>
-                        <input
-                            type="text"
-                            value={campaignName}
-                            onChange={(e) => setCampaignName(e.target.value)}
-                            placeholder="Enter campaign name"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Description</label>
-                        <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Enter description"
-                            maxLength="500"
-                        />
-                        <div className="character-count">{description.length}/500</div>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Campaign Image or Video</label>
-                        <input type="file" onChange={handleImageUpload} id="upload-button" />
-                        <label htmlFor="upload-button" className="upload-btn">
-                            {image ? image.name : 'Upload'}
-                        </label>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Caption</label>
-                        <input
-                            type="text"
-                            value={caption}
-                            onChange={(e) => setCaption(e.target.value)}
-                            placeholder="Add caption here"
-                        />
-                    </div>
-
-                    <button type="submit" className="proceed-btn">Proceed</button>
-                </form>
+                <div className="campaign-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pause/Start</th>
+                                <th>Campaign Name</th>
+                                <th>Daily Budget</th>
+                                <th>Duration</th>
+                                <th>Views</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {campaigns.map((campaign, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <label className="switch">
+                                            <input
+                                                type="checkbox"
+                                                checked={campaign.active}
+                                                onChange={() => toggleCampaign(index)}
+                                            />
+                                            <span className="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td>{campaign.name}</td>
+                                    <td>{campaign.budget}$</td>
+                                    <td>{campaign.duration}</td>
+                                    <td>{campaign.views}</td>
+                                    <td>
+                                        <button className="edit-btn"><img src={edit} alt="edit" /></button>
+                                        <button className="delete-btn" onClick={() => deleteCampaign(index)}><img src={deleteIcon} alt="deleteIcon" /></button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     )
 };
 
 export default Campaigns;
-

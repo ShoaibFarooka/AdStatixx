@@ -4,6 +4,7 @@ import ForgotPassword from '../pages/common/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from '../pages/common/ResetPassword/ResetPassword.jsx';
 import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
 import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
+import AddCampaigns from '../pages/company/Campaigns/components/AddCampaign.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 
@@ -22,6 +23,8 @@ const routes = [
   //company
   { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns-edit", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns-add", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
   // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
 
   //admin
