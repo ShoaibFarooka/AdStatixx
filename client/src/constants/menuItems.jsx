@@ -1,10 +1,10 @@
-import DashboardIcon from '../assets/icons/dashboard_icon.svg?react';
+import DashboardIcon from '../assets/icons/Users.svg?react';
 // import UsersIcon from '../assets/icons/users_icon.svg?react';
 // import EmployeesIcon from '../assets/icons/employees_icon.svg?react';
 // import CalendarIcon from '../assets/icons/calendar_icon.svg?react';
 // import ActivitiesIcon from '../assets/icons/activities_icon.svg?react';
 // import InvoiceIcon from '../assets/icons/invoice_icon.svg?react';
-import CampaignsIcon from '../assets/icons/campaigns_icon.svg?react';
+import CampaignsIcon from '../assets/icons/Users.svg?react';
 // import NotificationsIcon from '../assets/icons/notifications_icon.svg?react';
 // import SettingsIcon from '../assets/icons/settings_icon.svg?react';
 // import StatisticsIcon from '../assets/icons/statistics_icon.svg?react';
