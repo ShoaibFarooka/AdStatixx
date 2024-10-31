@@ -141,7 +141,7 @@ input:checked+.slider:before {
   z-index: 999 !important;
 }
 
-label {
+.company_label {
   font-family: Urbanist;
   font-size: 16px;
   font-weight: 600;
@@ -152,10 +152,10 @@ label {
   margin-bottom: 13px;
 }
 
-input[type="text"],
-textarea,
-select {
-  min-height: 60px;
+.company_input[type="text"],
+.company_textarea,
+.company_select {
+  min-height: 40px;
   width: 100%;
   padding: 10px;
   border: 1px solid #d4e4cc;
@@ -191,4 +191,8 @@ input[type="file"] {
   cursor: pointer;
   font-size: 16px;
   font-weight: 300;
+}
+
+.error{
+  color: red;
 }
