@@ -36,7 +36,7 @@ const AddCampaign = () => {
     return (
         <>
 
-            <div className="table p-5 md:p-[50px]">
+            <div className="main_table p-5 md:p-[50px]">
                 <div className="heading">
                     <img src={plan} alt="plan" />
 
@@ -54,11 +54,11 @@ const AddCampaign = () => {
                         <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step >= 1 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}`}>
                             {step >= 1 && <img src={tick} alt="" />}
                         </div>
-                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step >= 2 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}`}>
-                            {step >= 2 && <img src={tick} alt="" />}
+                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step == 3 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}  ${step == 2 ? 'bg-[#D4EAC8]' : ''}`}>
+                            {step >= 3 && <img src={tick} alt="" />}
                         </div>
-                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step === 3 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}`}>
-                            {step === 3 && <img src={tick} alt="" />}
+                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step === 3 ? 'bg-[#D4EAC8]' : 'bg-white border-[#6AB541] border'}`}>
+                            {step === 4 && <img src={tick} alt="" />}
                         </div>
                         <div className="border-dashed border z-0 border-[#6AB541] absolute w-[100%] top-[19px]"></div>
                     </div>
@@ -253,7 +253,7 @@ const AddCampaign = () => {
                         )}
 
                         <div className="flex">
-                            {step > 0 && (
+                            {step > 1 && (
                                 <button type="button" onClick={prevStep} className="proceed-btn mr-4 bg-[#6AB541] text-white w-[150px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer">
                                     Back
                                 </button>

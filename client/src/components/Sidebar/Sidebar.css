@@ -1,6 +1,7 @@
 .sidebar-wrapper {
     display: flex;
     flex-direction: column;
+    z-index: +999;
 }
 
 .sidebar-wrapper .hamburger-container {

@@ -35,13 +35,13 @@ const Campaigns = () => {
         <div className="dashboard">
 
             <div
-                onClick={() => navigate("/company/campaigns-add")}
+                onClick={() => navigate("/company/campaigns/add-campaign")}
                 className="bg-[#6AB541] text-white w-[180px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer"
             >
                 Create Campaign +
             </div>
 
-            <div className="table">
+            <div className="main_table">
                 <div className="heading">
                     <img src={plan} alt="plan" />
 
@@ -49,21 +49,21 @@ const Campaigns = () => {
                 </div>
 
                 <div className="campaign-table">
-                    <table>
+                    <table className="table">
                         <thead>
-                            <tr>
-                                <th>Pause/Start</th>
-                                <th>Campaign Name</th>
-                                <th>Daily Budget</th>
-                                <th>Duration</th>
-                                <th>Views</th>
-                                <th>Action</th>
+                            <tr className="campaign_tr">
+                                <th className="campaign_th">Pause/Start</th>
+                                <th className="campaign_th">Campaign Name</th>
+                                <th className="campaign_th">Daily Budget</th>
+                                <th className="campaign_th">Duration</th>
+                                <th className="campaign_th">Views</th>
+                                <th className="campaign_th">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {campaigns.map((campaign, index) => (
-                                <tr key={index}>
-                                    <td>
+                                <tr className="campaign_tr" key={index}>
+                                    <td className="campaign_td">
                                         <label className="switch">
                                             <input
                                                 type="checkbox"
@@ -73,11 +73,11 @@ const Campaigns = () => {
                                             <span className="slider"></span>
                                         </label>
                                     </td>
-                                    <td>{campaign.name}</td>
-                                    <td>{campaign.budget}$</td>
-                                    <td>{campaign.duration}</td>
-                                    <td>{campaign.views}</td>
-                                    <td>
+                                    <td className="campaign_td">{campaign.name}</td>
+                                    <td className="campaign_td">{campaign.budget}$</td>
+                                    <td className="campaign_td">{campaign.duration}</td>
+                                    <td className="campaign_td">{campaign.views}</td>
+                                    <td className="campaign_td">
                                         <button className="edit-btn"><img src={edit} alt="edit" /></button>
                                         <button className="delete-btn" onClick={() => deleteCampaign(index)}><img src={deleteIcon} alt="deleteIcon" /></button>
                                     </td>

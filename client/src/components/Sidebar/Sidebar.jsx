@@ -84,10 +84,7 @@ const Sidebar = () => {
                     {items.map((item) => (
                         <div
                             key={item.path}
-                            className={`item ${location.pathname === item.path || (item.path === "/company/campaigns" && location.pathname.includes("/company/campaigns"))
-                                    ? 'active-item'
-                                    : 'non-active-item'
-                                }`}
+                            className={`item ${location.pathname.startsWith(item.path) ? 'active-item' : 'non-active-item'}`}
                         >
                             {item.disabled ? (
                                 <div className='item-link'>
@@ -102,6 +99,7 @@ const Sidebar = () => {
                             )}
                         </div>
                     ))}
+
 
                     <div className={`item non-active-item`} onClick={handleLogout}>
                         <div className='item-link'>

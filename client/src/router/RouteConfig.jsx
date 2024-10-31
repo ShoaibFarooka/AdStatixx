@@ -24,8 +24,8 @@ const routes = [
   //company
   { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
-  { path: "/company/campaigns-edit", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
-  { path: "/company/campaigns-add", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns/edit-campaign", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns/add-campaign", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
   // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
 
   //admin

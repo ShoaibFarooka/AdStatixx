@@ -1,5 +1,4 @@
-
-.table{
+.main_table {
   border: 0.42px solid #ECECEC;
   background-color: #FFFFFF;
   border-radius: 15.97px;
@@ -7,26 +6,26 @@
   width: 100%;
 }
 
-.table span{
-font-family: Urbanist;
-font-size: 20px;
-font-weight: 700;
-line-height: 24px;
-text-align: left;
-padding-left: 10px;
+.main_table span {
+  font-family: Urbanist;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: left;
+  padding-left: 10px;
 }
 
-.heading{
+.heading {
   display: flex;
   align-items: center;
 }
 
 .campaign-table {
-  width: 100%;
   overflow-x: auto;
 }
 
-table {
+.table {
+  min-width: 800px;
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
@@ -34,23 +33,24 @@ table {
   font-family: Urbanist, sans-serif;
 }
 
-th{
+.campaign_th {
   font-weight: 500;
 }
 
-td{
+.campaign_td {
   font-family: Poppins;
   font-weight: 400;
   font-size: 13.9px;
 }
 
-th, td {
+.campaign_th,
+.campaign_td {
   padding: 10px 15px;
   text-align: center;
   margin-bottom: 13px;
 }
 
-thead th {
+thead .campaign_th {
   background-color: #F2F9EC;
 }
 
@@ -92,15 +92,16 @@ thead th {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #4caf50;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -124,7 +125,7 @@ input:checked + .slider:before {
   color: #d32f2f;
 }
 
-  
+
 .form-group {
   margin-bottom: 40px;
   width: 60%;
@@ -134,67 +135,60 @@ input:checked + .slider:before {
   .form-group {
     width: 100%;
   }
-  
-  .campaign-table {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; 
-  }
+}
 
-  table {
-    width: 800px; 
-  }
+.react-datepicker-popper {
+  z-index: 999 !important;
+}
+
+label {
+  font-family: Urbanist;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.2px;
+  letter-spacing: 0.01em;
+  text-align: left;
+  display: block;
+  margin-bottom: 13px;
+}
+
+input[type="text"],
+textarea,
+select {
+  min-height: 60px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d4e4cc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: #4caf50;
 }
 
 
-  
-  label {
-    font-family: Urbanist;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 19.2px;
-    letter-spacing: 0.01em;
-    text-align: left;
-    display: block;
-    margin-bottom: 13px;
-  }
-  
-  input[type="text"], textarea ,select{
-    min-height: 60px;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #d4e4cc;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: #4caf50;
-  }
-  
-  
-  textarea {
-    resize: none;
-    height: 179px;
-    padding: 10px;
-  }
-  
-  .character-count {
-    text-align: right;
-    color: #bfbfbf;
-    font-size: 14px;
-  }
-  
-  input[type="file"] {
-    display: none;
-  }
-  
-  .upload-btn {
-    width: 100%;
-    min-height: 60px;
-    display: inline-block;
-    padding: 18px 15px;
-    border: 1px solid #d4e4cc;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 300;
-  }
+textarea {
+  resize: none;
+  height: 179px;
+  padding: 10px;
+}
 
-  
+.character-count {
+  text-align: right;
+  color: #bfbfbf;
+  font-size: 14px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.upload-btn {
+  width: 100%;
+  min-height: 60px;
+  display: inline-block;
+  padding: 18px 15px;
+  border: 1px solid #d4e4cc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 300;
+}
