@@ -183,9 +183,9 @@ input[type="file"] {
 
 .upload-btn {
   width: 100%;
-  min-height: 60px;
+  height: 40px;
   display: inline-block;
-  padding: 18px 15px;
+  padding: 7px 10px;
   border: 1px solid #d4e4cc;
   border-radius: 5px;
   cursor: pointer;
@@ -193,6 +193,6 @@ input[type="file"] {
   font-weight: 300;
 }
 
-.error{
+.error {
   color: red;
 }

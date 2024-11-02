@@ -23,6 +23,17 @@ const AddCampaign = () => {
     const [openEnd, setOpenEnd] = useState(false);
     const [errors, setErrors] = useState({});
 
+    const [images, setImages] = useState([]); // Store multiple images
+
+    const handleImageUpload = (e) => {
+        const selectedFiles = Array.from(e.target.files); // Convert FileList to array
+        setImages((prevImages) => [...prevImages, ...selectedFiles]); // Append new images
+    };
+
+    const removeImage = (index) => {
+        setImages((prevImages) => prevImages.filter((_, i) => i !== index)); // Remove image by index
+    };
+
     const validateStep = () => {
         let newErrors = {};
 
@@ -49,10 +60,6 @@ const AddCampaign = () => {
         }
     };
     const prevStep = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
-
-    const handleImageUpload = (e) => {
-        setImage(e.target.files[0]);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -130,15 +137,49 @@ const AddCampaign = () => {
 
                                 <div className="form-group relative">
                                     <label className="company_label">Campaign Image or Video</label>
-                                    <input type="file" multiple onChange={handleImageUpload} id="upload-button" />
-                                    <label htmlFor="upload-button" className="upload-btn ">
-                                        {image ? image.name : 'image.png'}
+
+                                    {/* Hidden file input */}
+                                    <input
+                                        type="file"
+                                        multiple
+                                        onChange={handleImageUpload}
+                                        id="upload-button"
+                                        style={{ display: 'none' }}
+                                    />
+
+                                    {/* Label that displays the chosen file name */}
+                                    <label htmlFor="upload-button" className="upload-btn">
+                                        {images.length > 0 ? `${images.length} files selected` : 'image.png'}
                                     </label>
 
-                                    <span className="absolute border-[#6AB541] border flex justify-center items-center h-[60px] w-[126px] right-0 top-8 text-[#6AB541] rounded-lg font-normal">Upload</span>
+                                    {/* Custom upload button */}
+                                    <label
+                                        htmlFor="upload-button"
+                                        className="absolute border-[#6AB541] border flex justify-center items-center h-[40px] w-[126px] right-0 top-8 text-[#6AB541] rounded-lg font-normal cursor-pointer"
+                                    >
+                                        Upload
+                                    </label>
 
-                                    {errors.image && <p className="error">{errors.image}</p>}
+                                    {/* Display uploaded images with remove buttons */}
+                                    <div className="image-preview-container mt-4 w-full ">
+                                        {images.map((img, index) => (
+                                            <div key={index} className="file-name-item flex border items-center mb-2 relative h-[40px] rounded">
+                                                <span className="file-name mr-2 " style={{fontWeight:300, fontSize:"15px"}}>
+                                                    {img.name.length > 15 ? `${img.name.slice(0, 15)}...` : img.name}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    className="remove-button rounded-full absolute right-2 text-lg w-5 h-5 flex items-center justify-center"
+                                                    onClick={() => removeImage(index)}
+                                                >
+                                                    &times;
+                                                </button>
+                                            </div>
+                                        ))}
+
+                                    </div>
                                 </div>
+
 
                                 <div className="form-group">
                                     <label className="company_label">Caption</label>
