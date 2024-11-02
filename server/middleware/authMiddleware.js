@@ -1,4 +1,4 @@
-const { loadDBModel } = require('../utils/modelUtils');
+const User = require('../models/userModel');
 const authUtils = require("../utils/authUtils");
 
 const authenticateRequest = (req, res, next) => {
@@ -26,7 +26,6 @@ const authenticateRequest = (req, res, next) => {
 const verifyRole = (requiredRoles) => {
   return async (req, res, next) => {
     try {
-      const User = loadDBModel(req.dbConnectionId, 'user');
       const userId = req.user?.id;
       const user = await User.findById(userId);
 
