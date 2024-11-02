@@ -36,7 +36,7 @@ const AddCampaign = () => {
             if (!gender) newErrors.gender = "Gender selection is required";
             if (!postalCode) newErrors.postalCode = "Postal code is required";
             if (!radius) newErrors.radius = "Radius selection is required";
-        } 
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -45,6 +45,7 @@ const AddCampaign = () => {
     const nextStep = () => {
         if (validateStep()) {
             setStep((prevStep) => Math.min(prevStep + 1, 3));
+            console.log("add step", step)
         }
     };
     const prevStep = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
@@ -55,22 +56,21 @@ const AddCampaign = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    
-        // Validate step 3 fields
+        console.log("ttt")
         let newErrors = {};
         if (!dailyBudget) newErrors.dailyBudget = "Daily budget is required";
         if (!budgetPerView) newErrors.budgetPerView = "Budget per view is required";
         if (!adStartDate) newErrors.adStartDate = "Start date is required";
         if (!adEndDate) newErrors.adEndDate = "End date is required";
-    
+        if (!radius2) newErrors.radius2 = "End date is required";
+
         if (Object.keys(newErrors).length === 0) {
-            // No errors in step 3, submit form
             console.log({ campaignName, description, caption, image, dailyBudget, budgetPerView, adStartDate, adEndDate, openEnd, radius });
         } else {
-            // Set errors and prevent form submission
             setErrors(newErrors);
         }
-    };    
+    };
+
 
     return (
         <>
@@ -108,7 +108,7 @@ const AddCampaign = () => {
                                 <div className="form-group">
                                     <label className="company_label">Campaign Name</label>
                                     <input
-                                    className="company_input"
+                                        className="company_input"
                                         type="text"
                                         value={campaignName}
                                         onChange={(e) => setCampaignName(e.target.value)}
@@ -118,7 +118,7 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label  className="company_label">Description</label>
+                                    <label className="company_label">Description</label>
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
@@ -129,21 +129,21 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group relative">
-                                    <label  className="company_label">Campaign Image or Video</label>
+                                    <label className="company_label">Campaign Image or Video</label>
                                     <input type="file" multiple onChange={handleImageUpload} id="upload-button" />
-                                    <label  htmlFor="upload-button" className="upload-btn ">
+                                    <label htmlFor="upload-button" className="upload-btn ">
                                         {image ? image.name : 'image.png'}
                                     </label>
 
                                     <span className="absolute border-[#6AB541] border flex justify-center items-center h-[60px] w-[126px] right-0 top-8 text-[#6AB541] rounded-lg font-normal">Upload</span>
 
-                                    {errors.campaignName && <p className="error">{errors.campaignName}</p>}
+                                    {errors.image && <p className="error">{errors.image}</p>}
                                 </div>
 
                                 <div className="form-group">
                                     <label className="company_label">Caption</label>
                                     <input
-                                     className="company_input"
+                                        className="company_input"
                                         type="text"
                                         value={caption}
                                         onChange={(e) => setCaption(e.target.value)}
@@ -157,7 +157,6 @@ const AddCampaign = () => {
 
                         {step == 2 && (
                             <div>
-                                {/* Displaying New Fields as per the Image */}
                                 <div className="flex w-full md:w-[60%] ">
                                     <div className="form-group ">
                                         <label className="company_label">Select Age</label>
@@ -309,6 +308,8 @@ const AddCampaign = () => {
                                         <option value="15km">15 km</option>
                                         <option value="20km">20 km</option>
                                     </select>
+
+                                    {errors.radius2 && <p className="error">{errors.radius2}</p>}
                                 </div>
                             </div>
                         )}
@@ -319,15 +320,19 @@ const AddCampaign = () => {
                                     Back
                                 </button>
                             )}
-                            {step < 3 ? (
+                            {step < 3 && (
                                 <button type="button" onClick={nextStep} className="proceed-btn bg-[#6AB541] text-white w-[150px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer">
                                     Proceed
                                 </button>
-                            ) : (
-                                <button type="submit" className="proceed-btn bg-[#6AB541] text-white w-[150px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer">
-                                    Submit
-                                </button>
-                            )}
+                            )
+                            }
+                            {step === 3 &&
+                                (
+                                    <button type="submit" className="proceed-btn bg-[#6AB541] text-white w-[150px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer">
+                                        Submit
+                                    </button>
+                                )
+                            }
                         </div>
                     </form>
                 </div>
