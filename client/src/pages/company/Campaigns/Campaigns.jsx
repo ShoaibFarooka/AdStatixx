@@ -1,39 +1,55 @@
-import "./Campaigns.css"
-import plan from "../../../assets/images/company.svg"
-import { useState } from "react";
+import "./Campaigns.css";
+import plan from "../../../assets/images/company.svg";
+import { useEffect, useState } from "react";
 import edit from "../../../assets/icons/edit.svg";
-import deleteIcon from "../../../assets/icons/delete.svg"
+import deleteIcon from "../../../assets/icons/delete.svg";
 import { useNavigate } from "react-router-dom";
+import CampaignService from "../../../services/Company/CampaignService";
 
 const Campaigns = () => {
-    const [campaigns, setCampaigns] = useState([
-        { name: "Lindsey Stroud", budget: 200, duration: "7 Days a week", views: 45, active: true },
-        { name: "Sarah Brown", budget: 100, duration: "7 Days a week", views: 2000, active: true },
-        { name: "Micheal Owen", budget: 100, duration: "7 Days a week", views: 45, active: true },
-        { name: "Mary Jane", budget: 200, duration: "7 Days a week", views: 45, active: true },
-        { name: "Peter Dodle", budget: 200, duration: "7 Days a week", views: 45, active: true },
-        { name: "Peter Dodle", budget: 100, duration: "7 Days a week", views: 45, active: true },
-        { name: "Peter Dodle", budget: 100, duration: "7 Days a week", views: 45, active: true },
-        { name: "Peter Dodle", budget: 300, duration: "7 Days a week", views: 45, active: true },
-    ]);
+    const [campaigns, setCampaigns] = useState([]);
+    const navigate = useNavigate();
 
-    const toggleCampaign = (index) => {
-        setCampaigns((prev) =>
-            prev.map((campaign, i) =>
-                i === index ? { ...campaign, active: !campaign.active } : campaign
-            )
-        );
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            try {
+                const response = await CampaignService.getCampaign();
+                if (response.campaigns) {
+                    setCampaigns(response.campaigns); 
+                } else {
+                    console.error("Campaigns not found in the response");
+                }
+            } catch (error) {
+                console.error("Error fetching campaigns:", error);
+            }
+        };
+
+        fetchCampaigns();
+    }, []);
+
+    const toggleCampaign = async (index) => {
+        const campaignToToggle = campaigns[index];
+        const updatedStatus = campaignToToggle.status === "active" ? "paused" : "active"; 
+    
+        try {
+            await CampaignService.updateCampaignStatus(campaignToToggle._id, { status: updatedStatus });
+            setCampaigns((prev) =>
+                prev.map((campaign, i) =>
+                    i === index ? { ...campaign, status: updatedStatus } : campaign
+                )
+            );
+        } catch (error) {
+            console.error("Error updating campaign status:", error);
+        }
     };
+    
 
     const deleteCampaign = (index) => {
         setCampaigns((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const navigate = useNavigate()
-
     return (
         <div className="dashboard">
-
             <div
                 onClick={() => navigate("/company/campaigns/add-campaign")}
                 className="bg-[#6AB541] text-white w-[180px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer"
@@ -44,7 +60,6 @@ const Campaigns = () => {
             <div className="main_table">
                 <div className="heading">
                     <img src={plan} alt="plan" />
-
                     <span>Campaigns</span>
                 </div>
 
@@ -67,19 +82,23 @@ const Campaigns = () => {
                                         <label className="switch">
                                             <input
                                                 type="checkbox"
-                                                checked={campaign.active}
+                                                checked={campaign.status === "active"} 
                                                 onChange={() => toggleCampaign(index)}
                                             />
                                             <span className="slider"></span>
                                         </label>
                                     </td>
-                                    <td className="campaign_td">{campaign.name}</td>
-                                    <td className="campaign_td">{campaign.budget}$</td>
-                                    <td className="campaign_td">{campaign.duration}</td>
-                                    <td className="campaign_td">{campaign.views}</td>
+                                    <td className="campaign_td">{campaign.info.name}</td>
+                                    <td className="campaign_td">{campaign.budget.daliyBudget}$</td>
+                                    <td className="campaign_td">{campaign.duration.startDate} - {campaign.duration.endDate}</td>
+                                    <td className="campaign_td">{campaign.acceptanceCriteria.minimumViews}</td>
                                     <td className="campaign_td">
-                                        <button className="edit-btn"><img src={edit} alt="edit" /></button>
-                                        <button className="delete-btn" onClick={() => deleteCampaign(index)}><img src={deleteIcon} alt="deleteIcon" /></button>
+                                        <button className="edit-btn">
+                                            <img src={edit} alt="edit" />
+                                        </button>
+                                        <button className="delete-btn" onClick={() => deleteCampaign(index)}>
+                                            <img src={deleteIcon} alt="deleteIcon" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -88,7 +107,7 @@ const Campaigns = () => {
                 </div>
             </div>
         </div>
-    )
+    );
 };
 
 export default Campaigns;

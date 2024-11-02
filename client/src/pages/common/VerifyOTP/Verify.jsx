@@ -34,7 +34,7 @@ const Verify = () => {
                         <img src={lock} alt="lock" />
                     </div>
 
-                    <div className="title">Reset Password</div>
+                    <div className="title">Verify Access</div>
                     <p className="text-gray-500 mb-10">We sent you a code at <span className="text-green-500">johndoe@gmail.com</span></p>
 
                     <div className="flex space-x-3 mb-10">
