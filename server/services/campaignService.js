@@ -9,7 +9,7 @@ const createCampaign = async (campaignData, companyId) => {
     return campaign;
 };
 
-const updateCampaign = async (campaignId, updatedCampaignData) => {
+const updateCampaign = async (companyId, campaignId, updatedCampaignData) => {
     const campaignToUpdate = await Campaign.findById(campaignId);
 
     if (!campaignToUpdate) {
@@ -18,21 +18,38 @@ const updateCampaign = async (campaignId, updatedCampaignData) => {
         throw error;
     }
 
+    if (campaignToUpdate.company.toString() !== companyId.toString()) {
+        const error = new Error('Unauthorized to update this campaign!');
+        error.code = 403;
+        throw error;
+    }
+
+    const mergedAssets = [
+        ...campaignToUpdate.assets,
+        ...(updatedCampaignData.assets || [])
+    ];
+
     const updatedCampaign = await Campaign.findByIdAndUpdate(
         campaignId,
-        updatedCampaignData,
+        { ...updatedCampaignData, assets: mergedAssets },
         { new: true }
     );
 
     return updatedCampaign;
 };
 
-const updateCampaignStatus = async (campaignId, updatedStatus) => {
+const updateCampaignStatus = async (companyId, campaignId, updatedStatus) => {
     const campaignToUpdate = await Campaign.findById(campaignId);
 
     if (!campaignToUpdate) {
         const error = new Error('Campaign not found!');
         error.code = 404;
+        throw error;
+    }
+
+    if (companyId && campaignToUpdate.company.toString() !== companyId.toString()) {
+        const error = new Error('Unauthorized to update this campaign!');
+        error.code = 403;
         throw error;
     }
 
@@ -45,12 +62,18 @@ const updateCampaignStatus = async (campaignId, updatedStatus) => {
     return updatedCampaign;
 };
 
-const deleteCampaign = async (campaignId) => {
+const deleteCampaign = async (companyId, campaignId) => {
     const campaignToDelete = await Campaign.findById(campaignId);
 
     if (!campaignToDelete) {
         const error = new Error('Campaign not found!');
         error.code = 404;
+        throw error;
+    }
+
+    if (companyId && campaignToDelete.company.toString() !== companyId.toString()) {
+        const error = new Error('Unauthorized to delete this campaign!');
+        error.code = 403;
         throw error;
     }
 
@@ -71,10 +94,23 @@ const getCompanyCampaigns = async (companyId) => {
     return campaigns;
 };
 
+const getAllCampaigns = async () => {
+    const campaigns = await Campaign.find().populate('company', 'name email number address city zip');
+
+    if (!campaigns || campaigns.length <= 0) {
+        const error = new Error('Campaigns not found!');
+        error.code = 404;
+        throw error;
+    }
+
+    return campaigns;
+};
+
 module.exports = {
     createCampaign,
     updateCampaign,
     updateCampaignStatus,
     deleteCampaign,
-    getCompanyCampaigns
+    getCompanyCampaigns,
+    getAllCampaigns
 };
