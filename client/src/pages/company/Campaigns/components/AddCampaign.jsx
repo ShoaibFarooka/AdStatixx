@@ -70,8 +70,7 @@ const AddCampaign = () => {
             // Set errors and prevent form submission
             setErrors(newErrors);
         }
-    };
-    
+    };    
 
     return (
         <>
