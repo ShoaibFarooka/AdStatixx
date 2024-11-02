@@ -15,6 +15,7 @@ const AddCampaign = () => {
     const [gender, setGender] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [radius, setRadius] = useState('');
+    const [radius2, setRadius2] = useState('');
     const [dailyBudget, setDailyBudget] = useState('');
     const [budgetPerView, setBudgetPerView] = useState('');
     const [adStartDate, setAdStartDate] = useState(null);
@@ -35,12 +36,7 @@ const AddCampaign = () => {
             if (!gender) newErrors.gender = "Gender selection is required";
             if (!postalCode) newErrors.postalCode = "Postal code is required";
             if (!radius) newErrors.radius = "Radius selection is required";
-        } else if (step === 3) {
-            if (!dailyBudget) newErrors.dailyBudget = "Daily budget is required";
-            if (!budgetPerView) newErrors.budgetPerView = "Budget per view is required";
-            if (!adStartDate) newErrors.adStartDate = "Start date is required";
-            if (!adEndDate) newErrors.adEndDate = "End date is required";
-        }
+        } 
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -59,10 +55,23 @@ const AddCampaign = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (validateStep()) {
+    
+        // Validate step 3 fields
+        let newErrors = {};
+        if (!dailyBudget) newErrors.dailyBudget = "Daily budget is required";
+        if (!budgetPerView) newErrors.budgetPerView = "Budget per view is required";
+        if (!adStartDate) newErrors.adStartDate = "Start date is required";
+        if (!adEndDate) newErrors.adEndDate = "End date is required";
+    
+        if (Object.keys(newErrors).length === 0) {
+            // No errors in step 3, submit form
             console.log({ campaignName, description, caption, image, dailyBudget, budgetPerView, adStartDate, adEndDate, openEnd, radius });
-        }   
-     };
+        } else {
+            // Set errors and prevent form submission
+            setErrors(newErrors);
+        }
+    };
+    
 
     return (
         <>
@@ -82,10 +91,10 @@ const AddCampaign = () => {
                     </div>
 
                     <div className="flex justify-between w-full md:w-[60%] mb-[40px] relative">
-                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step >= 1 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}`}>
-                            {step >= 1 && <img src={tick} alt="" />}
+                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step == 1 ? 'bg-[#D4EAC8]' : 'bg-[#6AB541] border-[#D4EAC8] border'}`}>
+                            {step >= 2 && <img src={tick} alt="" />}
                         </div>
-                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step == 2 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}  ${step == 2 ? 'bg-[#D4EAC8]' : ''}`}>
+                        <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step >= 2 ? 'bg-[#6AB541]' : 'bg-white border-[#6AB541] border'}  ${step == 2 ? 'bg-[#D4EAC8]' : ''}`}>
                             {step >= 3 && <img src={tick} alt="" />}
                         </div>
                         <div className={`z-10 w-[38px] h-[38px] rounded-full flex justify-center items-center ${step === 3 ? 'bg-[#D4EAC8]' : 'bg-white border-[#6AB541] border'}`}>
@@ -291,8 +300,8 @@ const AddCampaign = () => {
                                 <div className="form-group">
                                     <label className="company_label">Select Radius</label>
                                     <select
-                                        value={radius}
-                                        onChange={(e) => setRadius(e.target.value)}
+                                        value={radius2}
+                                        onChange={(e) => setRadius2(e.target.value)}
                                         className="p-2 border rounded-md company_input h-[40px] w-full"
                                     >
                                         <option value="">Select Radius</option>
