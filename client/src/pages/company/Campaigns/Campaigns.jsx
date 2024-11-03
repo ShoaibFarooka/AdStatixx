@@ -5,6 +5,7 @@ import edit from "../../../assets/icons/edit.svg";
 import deleteIcon from "../../../assets/icons/delete.svg";
 import { useNavigate } from "react-router-dom";
 import CampaignService from "../../../services/Company/CampaignService";
+import Swal from 'sweetalert2'
 
 const Campaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -15,7 +16,7 @@ const Campaigns = () => {
             try {
                 const response = await CampaignService.getCampaign();
                 if (response.campaigns) {
-                    setCampaigns(response.campaigns); 
+                    setCampaigns(response.campaigns);
                 } else {
                     console.error("Campaigns not found in the response");
                 }
@@ -29,8 +30,8 @@ const Campaigns = () => {
 
     const toggleCampaign = async (index) => {
         const campaignToToggle = campaigns[index];
-        const updatedStatus = campaignToToggle.status === "active" ? "paused" : "active"; 
-    
+        const updatedStatus = campaignToToggle.status === "active" ? "paused" : "active";
+
         try {
             await CampaignService.updateCampaignStatus(campaignToToggle._id, { status: updatedStatus });
             setCampaigns((prev) =>
@@ -42,11 +43,29 @@ const Campaigns = () => {
             console.error("Error updating campaign status:", error);
         }
     };
-    
 
-    const deleteCampaign = (index) => {
-        setCampaigns((prev) => prev.filter((_, i) => i !== index));
+
+    const deleteCampaign = (campaignId) => {
+        Swal.fire({
+            title: "Do you want to delete the campaign?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            confirmButtonColor: "#d33",
+            cancelButtonText: "Cancel",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await CampaignService.deleteCampaign(campaignId);
+                    setCampaigns((prev) => prev.filter((campaign) => campaign._id !== campaignId));
+                } catch (error) {
+                    console.error("Error deleting campaign:", error);
+                    Swal.fire("Error!", "Failed to delete the campaign.", "error");
+                }
+            }
+        });
     };
+
+
 
     return (
         <div className="dashboard">
@@ -76,33 +95,44 @@ const Campaigns = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {campaigns.map((campaign, index) => (
-                                <tr className="campaign_tr" key={index}>
-                                    <td className="campaign_td">
-                                        <label className="switch">
-                                            <input
-                                                type="checkbox"
-                                                checked={campaign.status === "active"} 
-                                                onChange={() => toggleCampaign(index)}
-                                            />
-                                            <span className="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td className="campaign_td">{campaign.info.name}</td>
-                                    <td className="campaign_td">{campaign.budget.daliyBudget}$</td>
-                                    <td className="campaign_td">{campaign.duration.startDate} - {campaign.duration.endDate}</td>
-                                    <td className="campaign_td">{campaign.acceptanceCriteria.minimumViews}</td>
-                                    <td className="campaign_td">
-                                        <button className="edit-btn">
-                                            <img src={edit} alt="edit" />
-                                        </button>
-                                        <button className="delete-btn" onClick={() => deleteCampaign(index)}>
-                                            <img src={deleteIcon} alt="deleteIcon" />
-                                        </button>
+                            {campaigns.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center pt-4">
+                                        There is no campaign
                                     </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                campaigns.map((campaign, index) => (
+                                    <tr className="campaign_tr" key={index}>
+                                        <td className="campaign_td">
+                                            <label className="switch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={campaign.status === "active"}
+                                                    onChange={() => toggleCampaign(index)}
+                                                />
+                                                <span className="slider"></span>
+                                            </label>
+                                        </td>
+                                        <td className="campaign_td">{campaign.info.name}</td>
+                                        <td className="campaign_td">{campaign.budget.daliyBudget}$</td>
+                                        <td className="campaign_td">
+                                            {campaign.duration.startDate} - {campaign.duration.endDate}
+                                        </td>
+                                        <td className="campaign_td">{campaign.acceptanceCriteria.minimumViews}</td>
+                                        <td className="campaign_td">
+                                            <button className="edit-btn">
+                                                <img src={edit} alt="edit" />
+                                            </button>
+                                            <button className="delete-btn" onClick={() => deleteCampaign(campaign._id)}>
+                                                <img src={deleteIcon} alt="deleteIcon" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
+
                     </table>
                 </div>
             </div>
