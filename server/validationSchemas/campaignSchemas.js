@@ -55,6 +55,8 @@ const createAndUpdateCampaignSchema = yup.object().shape({
     acceptanceCriteria: acceptanceCriteriaSchema.required('Acceptance criteria object is required'),
 });
 
+
+
 const updateCampaignStatusSchema = yup.object().shape({
     status: yup.string().trim().required('Status is required').oneOf(['active', 'paused'], 'Invalid status type'),
 });

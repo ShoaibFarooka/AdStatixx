@@ -4,6 +4,8 @@ import "../Campaigns.css"
 import tick from "../../../../assets/icons/tick.svg"
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CampaignService from "../../../../services/Company/CampaignService";
+import { format } from 'date-fns';
 
 const AddCampaign = () => {
     const [campaignName, setCampaignName] = useState('');
@@ -22,9 +24,10 @@ const AddCampaign = () => {
     const [adEndDate, setAdEndDate] = useState(null);
     const [openEnd, setOpenEnd] = useState(false);
     const [errors, setErrors] = useState({});
-
+    console.log(adEndDate, "adEndDate")
     const [images, setImages] = useState([]); // Store multiple images
-
+    console.log(images, "images")
+    
     const handleImageUpload = (e) => {
         const selectedFiles = Array.from(e.target.files); // Convert FileList to array
         setImages((prevImages) => [...prevImages, ...selectedFiles]); // Append new images
@@ -40,7 +43,7 @@ const AddCampaign = () => {
         if (step === 1) {
             if (!campaignName) newErrors.campaignName = "Campaign name is required";
             if (!description) newErrors.description = "Description is required";
-            if (!image) newErrors.image = "Image is required";
+            // if (images.length === 0) newErrors.image = "Image is required";
             if (!caption) newErrors.caption = "Caption is required";
         } else if (step === 2) {
             if (!age) newErrors.age = "Age selection is required";
@@ -61,22 +64,87 @@ const AddCampaign = () => {
     };
     const prevStep = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("ttt")
+
+
         let newErrors = {};
+
+        // Step 3 validation
         if (!dailyBudget) newErrors.dailyBudget = "Daily budget is required";
         if (!budgetPerView) newErrors.budgetPerView = "Budget per view is required";
-        if (!adStartDate) newErrors.adStartDate = "Start date is required";
-        if (!adEndDate) newErrors.adEndDate = "End date is required";
-        if (!radius2) newErrors.radius2 = "End date is required";
+        if (!openEnd) {  // Only validate dates if not open-ended
+            if (!adStartDate) newErrors.adStartDate = "Start date is required";
+            if (!adEndDate) newErrors.adEndDate = "End date is required";
+        }
+
+        setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            console.log({ campaignName, description, caption, image, dailyBudget, budgetPerView, adStartDate, adEndDate, openEnd, radius });
-        } else {
-            setErrors(newErrors);
+            try {
+                const cleanDailyBudget = parseFloat(dailyBudget.replace(/[^0-9.]/g, ''));
+                const cleanBudgetPerView = parseFloat(budgetPerView);
+
+                const formattedStartDate = format(adStartDate, 'yyyy-MM-dd');
+                const formattedEndDate = format(adEndDate, 'yyyy-MM-dd');
+                console.log(images, "images 1")
+
+                const newCampaignData = {
+                    info: {
+                        name: campaignName.trim(),
+                        description: description.trim(),
+                        caption: caption.trim(),
+                        type: "fixed",
+                    },
+                    filters: {
+                        age: age.toString(),
+                        gender: gender.toLowerCase().toString(),
+                        postalCode: postalCode.trim(),
+                        radius: radius.toString(),
+                    },
+                    budget: {
+                        daliyBudget: cleanDailyBudget,
+                        perViewBudget: cleanBudgetPerView,
+                        totalBudget: cleanDailyBudget * 30,
+                    },
+                    duration: {
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
+                    },
+                    acceptanceCriteria: {
+                        minimumViews: 500,
+                    },
+                    assets: images,
+                };
+
+                const formData = new FormData()
+
+                formData.append("info", JSON.stringify(newCampaignData.info))
+                formData.append("filters", JSON.stringify(newCampaignData.filters))
+                formData.append("budget", JSON.stringify(newCampaignData.budget))
+                formData.append("duration", JSON.stringify(newCampaignData.duration))
+                formData.append("acceptanceCriteria", JSON.stringify(newCampaignData.acceptanceCriteria))
+                
+                images.forEach((file, index) => {
+                    console.log(`File${index}: `, file);
+                    formData.append(`assets`, file);
+                });
+
+                console.log(newCampaignData, "newCampaignData");
+
+                const response = await CampaignService.createCampaign(formData);
+                console.log("Campaign added successfully:", response);
+
+            } catch (error) {
+                console.error("Error adding campaign:", error);
+                setErrors({
+                    submit: error.response?.data?.message || "Failed to create campaign. Please try again."
+                });
+            }
         }
     };
+
 
 
     return (
@@ -164,7 +232,7 @@ const AddCampaign = () => {
                                     <div className="image-preview-container mt-4 w-full ">
                                         {images.map((img, index) => (
                                             <div key={index} className="file-name-item flex border items-center mb-2 relative h-[40px] rounded">
-                                                <span className="file-name mr-2 " style={{fontWeight:300, fontSize:"15px"}}>
+                                                <span className="file-name mr-2 " style={{ fontWeight: 300, fontSize: "15px" }}>
                                                     {img.name.length > 15 ? `${img.name.slice(0, 15)}...` : img.name}
                                                 </span>
                                                 <button
@@ -235,7 +303,7 @@ const AddCampaign = () => {
                                 <div className="form-group">
                                     <label className="company_label">Add Postal Code</label>
                                     <input
-                                        type="text"
+                                        type="number"
                                         value={postalCode}
                                         onChange={(e) => setPostalCode(e.target.value)}
                                         placeholder="Enter Postal Code"
@@ -286,7 +354,8 @@ const AddCampaign = () => {
                                     <div className="form-group ml-5">
                                         <label className="company_label">Budget Per View</label>
                                         <input
-                                            type="text"
+                                            type="number"
+                                            step={.01}
                                             value={budgetPerView}
                                             onChange={(e) => setBudgetPerView(e.target.value)}
                                             placeholder="Enter Budget Per View"
