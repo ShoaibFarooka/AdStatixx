@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import edit from "../../../assets/icons/edit.svg";
 import deleteIcon from "../../../assets/icons/delete.svg";
 import { useNavigate } from "react-router-dom";
-import CampaignService from "../../../services/Company/CampaignService";
+import CampaignService from "../../../services/CampaignService";
 import Swal from 'sweetalert2'
 
 const Campaigns = () => {

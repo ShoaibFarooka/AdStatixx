@@ -1,8 +1,8 @@
-import axiosInstance from '../axiosInstance';
+import axiosInstance from './axiosInstance';
 
 const BASE_URL = '/api/campaign';
 
-const CampaignService={
+const CampaignService = {
     getCampaign: async () => {
         try {
             const response = await axiosInstance.get(`${BASE_URL}/get-company-campaigns`);
@@ -21,7 +21,11 @@ const CampaignService={
     },
     createCampaign: async (payload) => {
         try {
-            const response = await axiosInstance.post(`${BASE_URL}/create-campaign`, payload);
+            const response = await axiosInstance.post(`${BASE_URL}/create-campaign`, payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             return response.data;
         } catch (error) {
             throw error;

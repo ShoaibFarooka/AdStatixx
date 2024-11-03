@@ -4,7 +4,7 @@ import ForgotPassword from '../pages/common/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from '../pages/common/ResetPassword/ResetPassword.jsx';
 import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
 import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
-import AddCampaigns from '../pages/company/Campaigns/components/AddCampaign.jsx';
+import AddCampaigns from '../pages/company/Campaigns/components/AddCampaign/AddCampaign.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 import Verify from '../pages/common/VerifyOTP/Verify.jsx';

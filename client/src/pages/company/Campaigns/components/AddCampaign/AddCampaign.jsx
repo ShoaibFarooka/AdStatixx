@@ -1,17 +1,16 @@
 import { useState } from "react";
-import plan from "../../../../assets/images/company.svg"
-import "../Campaigns.css"
-import tick from "../../../../assets/icons/tick.svg"
+import plan from "../../../../../assets/images/company.svg"
+import "../../Campaigns.css";
+import tick from "../../../../../assets/icons/tick.svg"
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CampaignService from "../../../../services/Company/CampaignService";
+import CampaignService from "../../../../../services/CampaignService";
 import { format } from 'date-fns';
 
 const AddCampaign = () => {
     const [campaignName, setCampaignName] = useState('');
     const [description, setDescription] = useState('');
     const [caption, setCaption] = useState('');
-    const [image, setImage] = useState(null);
     const [step, setStep] = useState(1);
     const [age, setAge] = useState('');
     const [gender, setGender] = useState('');
@@ -24,10 +23,8 @@ const AddCampaign = () => {
     const [adEndDate, setAdEndDate] = useState(null);
     const [openEnd, setOpenEnd] = useState(false);
     const [errors, setErrors] = useState({});
-    console.log(adEndDate, "adEndDate")
     const [images, setImages] = useState([]); // Store multiple images
-    console.log(images, "images")
-    
+
     const handleImageUpload = (e) => {
         const selectedFiles = Array.from(e.target.files); // Convert FileList to array
         setImages((prevImages) => [...prevImages, ...selectedFiles]); // Append new images
@@ -59,7 +56,6 @@ const AddCampaign = () => {
     const nextStep = () => {
         if (validateStep()) {
             setStep((prevStep) => Math.min(prevStep + 1, 3));
-            console.log("add step", step)
         }
     };
     const prevStep = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
@@ -88,7 +84,6 @@ const AddCampaign = () => {
 
                 const formattedStartDate = format(adStartDate, 'yyyy-MM-dd');
                 const formattedEndDate = format(adEndDate, 'yyyy-MM-dd');
-                console.log(images, "images 1")
 
                 const newCampaignData = {
                     info: {
@@ -125,13 +120,10 @@ const AddCampaign = () => {
                 formData.append("budget", JSON.stringify(newCampaignData.budget))
                 formData.append("duration", JSON.stringify(newCampaignData.duration))
                 formData.append("acceptanceCriteria", JSON.stringify(newCampaignData.acceptanceCriteria))
-                
+
                 images.forEach((file, index) => {
-                    console.log(`File${index}: `, file);
                     formData.append(`assets`, file);
                 });
-
-                console.log(newCampaignData, "newCampaignData");
 
                 const response = await CampaignService.createCampaign(formData);
                 console.log("Campaign added successfully:", response);
@@ -144,8 +136,6 @@ const AddCampaign = () => {
             }
         }
     };
-
-
 
     return (
         <>

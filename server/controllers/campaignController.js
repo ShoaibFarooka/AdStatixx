@@ -22,7 +22,7 @@ const CreateCampaign = async (req, res, next) => {
             status: 'active'
         };
         console.log('Campaign Data: ', campaignData);
-        // const campaign = await campaignService.createCampaign(campaignData, companyId);
+        const campaign = await campaignService.createCampaign(campaignData, companyId);
         res.status(201).json({ message: "Campaign created successfully!" });
     } catch (error) {
         console.log('Error: ', error);
