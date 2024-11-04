@@ -33,7 +33,6 @@ const filtersSchema = yup.object().shape({
 }).transform(parseJSON).noUnknown(true, 'Unknown field in filters object');
 
 const budgetSchema = yup.object().shape({
-    daliyBudget: yup.number().required('Daliy budget is required').positive('Daliy budget must be positive'),
     perViewBudget: yup.number().required('Per view budget is required').positive('Per view budget must be positive'),
     totalBudget: yup.number().required('Total budget is required').positive('Total budget must be positive'),
 }).transform(parseJSON).noUnknown(true, 'Unknown field in budget object');
