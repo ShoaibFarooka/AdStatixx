@@ -79,7 +79,7 @@ const Campaigns = () => {
 
 
     return (
-        <div className="dashboard">
+        <div className="campaigns">
             <div
                 onClick={() => navigate("/company/campaigns/add-campaign")}
                 className="bg-[#6AB541] text-white w-[180px] sm:w-[234px] h-[50px] rounded-[10px] flex justify-center items-center mb-6 cursor-pointer"
