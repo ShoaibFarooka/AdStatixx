@@ -6,10 +6,18 @@ import deleteIcon from "../../../assets/icons/delete.svg";
 import { useNavigate } from "react-router-dom";
 import CampaignService from "../../../services/CampaignService";
 import Swal from 'sweetalert2'
+import { useDispatch } from 'react-redux';
+import { setSelectedCampaign } from '../../../redux/campaignSlice'; // adjust path as needed
 
 const Campaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleEditClick = (campaign) => {
+        dispatch(setSelectedCampaign(campaign)); 
+        navigate('/company/campaigns/edit-campaign'); 
+    };
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -121,7 +129,7 @@ const Campaigns = () => {
                                         </td>
                                         <td className="campaign_td">{campaign.acceptanceCriteria.minimumViews}</td>
                                         <td className="campaign_td">
-                                            <button className="edit-btn">
+                                            <button className="edit-btn" onClick={() => handleEditClick(campaign)}>
                                                 <img src={edit} alt="edit" />
                                             </button>
                                             <button className="delete-btn" onClick={() => deleteCampaign(campaign._id)}>

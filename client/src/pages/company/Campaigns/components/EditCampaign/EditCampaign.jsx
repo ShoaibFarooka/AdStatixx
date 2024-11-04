@@ -6,27 +6,33 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CampaignService from "../../../../../services/CampaignService";
 import { format } from 'date-fns';
-import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+import {useNavigate} from "react-router-dom";
+import { useSelector } from 'react-redux';
 
-const AddCampaign = () => {
-    const [campaignName, setCampaignName] = useState('');
-    const [description, setDescription] = useState('');
-    const [caption, setCaption] = useState('');
+const EditCampaign = () => {
+    const selectedCampaign = useSelector((state) => state.campaign.selectedCampaign);
+
+    const [campaignName, setCampaignName] = useState(selectedCampaign?.info?.name);
+    const [description, setDescription] = useState(selectedCampaign?.info?.description);
+    const [caption, setCaption] = useState(selectedCampaign?.info?.caption);
     const [step, setStep] = useState(1);
-    const [age, setAge] = useState('');
-    const [gender, setGender] = useState('');
-    const [postalCode, setPostalCode] = useState('');
-    const [radius, setRadius] = useState('');
-    const [totalBudget, setTotalBudget] = useState('');
-    const [budgetPerView, setBudgetPerView] = useState('');
-    const [adStartDate, setAdStartDate] = useState(null);
-    const [adEndDate, setAdEndDate] = useState(null);
+    const [age, setAge] = useState(selectedCampaign?.filter?.age);
+    const [gender, setGender] = useState(selectedCampaign?.filter?.gender);
+    const [postalCode, setPostalCode] = useState(selectedCampaign?.filter?.postalCode);
+    const [radius, setRadius] = useState(selectedCampaign?.filter?.radius);
+    const [radius2, setRadius2] = useState('');
+    const [dailyBudget, setDailyBudget] = useState(selectedCampaign?.budget?.dailyBudget);
+    const [budgetPerView, setBudgetPerView] = useState(selectedCampaign?.budget?.perViewBudget);
+    const [adStartDate, setAdStartDate] = useState(selectedCampaign?.duration?.startDate);
+    const [adEndDate, setAdEndDate] = useState(selectedCampaign?.duration?.endDate);
     const [openEnd, setOpenEnd] = useState(false);
     const [errors, setErrors] = useState({});
     const [images, setImages] = useState([]); // Store multiple images
-    const [type, setType] = useState("")
     const navigate = useNavigate()
+
+    console.log(selectedCampaign,"selectedCampaign")
+
+    console.log(selectedCampaign?.assets,"image test")
 
     const handleImageUpload = (e) => {
         const selectedFiles = Array.from(e.target.files); // Convert FileList to array
@@ -45,8 +51,6 @@ const AddCampaign = () => {
             if (!description) newErrors.description = "Description is required";
             // if (images.length === 0) newErrors.image = "Image is required";
             if (!caption) newErrors.caption = "Caption is required";
-            if (!type) newErrors.type = "Type is required";
-            if (images.length <= 0) newErrors.images = "Assets are required";
         } else if (step === 2) {
             if (!age) newErrors.age = "Age selection is required";
             if (!gender) newErrors.gender = "Gender selection is required";
@@ -73,17 +77,8 @@ const AddCampaign = () => {
         let newErrors = {};
 
         // Step 3 validation
-        if (!totalBudget) {
-            newErrors.totalBudget = "Total Budget is required";
-        } else if (!/^\d+$/.test(totalBudget)) {
-            newErrors.totalBudget = "Total Budget must be a number";
-        }
-        if (!budgetPerView) {
-            newErrors.budgetPerView = "Budget per view is required";
-        } else if (!/^\d+$/.test(budgetPerView)) {
-            newErrors.budgetPerView = "Budget per view must be a number";
-        }
-
+        if (!dailyBudget) newErrors.dailyBudget = "Daily budget is required";
+        if (!budgetPerView) newErrors.budgetPerView = "Budget per view is required";
         if (!openEnd) {  // Only validate dates if not open-ended
             if (!adStartDate) newErrors.adStartDate = "Start date is required";
             if (!adEndDate) newErrors.adEndDate = "End date is required";
@@ -93,7 +88,7 @@ const AddCampaign = () => {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                const cleantotalBudget = parseFloat(totalBudget.replace(/[^0-9.]/g, ''));
+                const cleanDailyBudget = parseFloat(dailyBudget.replace(/[^0-9.]/g, ''));
                 const cleanBudgetPerView = parseFloat(budgetPerView);
 
                 const formattedStartDate = format(adStartDate, 'yyyy-MM-dd');
@@ -104,7 +99,7 @@ const AddCampaign = () => {
                         name: campaignName.trim(),
                         description: description.trim(),
                         caption: caption.trim(),
-                        type: type,
+                        type: "fixed",
                     },
                     filters: {
                         age: age.toString(),
@@ -113,9 +108,9 @@ const AddCampaign = () => {
                         radius: radius.toString(),
                     },
                     budget: {
-                        daliyBudget: cleantotalBudget,
+                        daliyBudget: cleanDailyBudget,
                         perViewBudget: cleanBudgetPerView,
-                        totalBudget: cleantotalBudget * 30,
+                        totalBudget: cleanDailyBudget * 30,
                     },
                     duration: {
                         startDate: formattedStartDate,
@@ -141,12 +136,12 @@ const AddCampaign = () => {
 
                 const response = await CampaignService.createCampaign(formData);
                 console.log("Campaign added successfully:", response);
-                message.success(response?.message)
                 navigate("/company/campaigns")
             } catch (error) {
                 console.error("Error adding campaign:", error);
-                message.error(error.response?.data?.error || "Failed to create campaign. Please try again.")
-
+                setErrors({
+                    submit: error.response?.data?.message || "Failed to create campaign. Please try again."
+                });
             }
         }
     };
@@ -185,7 +180,7 @@ const AddCampaign = () => {
                         {step == 1 && (
                             <div>
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Campaign Name</label>
+                                    <label className="company_label">Campaign Name</label>
                                     <input
                                         className="company_input"
                                         type="text"
@@ -197,7 +192,7 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Description</label>
+                                    <label className="company_label">Description</label>
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
@@ -208,7 +203,7 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group relative">
-                                    <label htmlFor="" className="company_label">Campaign Image or Video</label>
+                                    <label className="company_label">Campaign Image or Video</label>
 
                                     {/* Hidden file input */}
                                     <input
@@ -221,7 +216,7 @@ const AddCampaign = () => {
 
                                     {/* Label that displays the chosen file name */}
                                     <label htmlFor="upload-button" className="upload-btn">
-                                        {images.length > 0 ? `${images.length} files selected` : 'No File uploaded'}
+                                        {images.length > 0 ? `${images.length} files selected` : 'image.png'}
                                     </label>
 
                                     {/* Custom upload button */}
@@ -231,8 +226,6 @@ const AddCampaign = () => {
                                     >
                                         Upload
                                     </label>
-
-                                    {errors.images && <p className="error">{errors.images}</p>}
 
                                     {/* Display uploaded images with remove buttons */}
                                     <div className="image-preview-container mt-4 w-full ">
@@ -256,7 +249,7 @@ const AddCampaign = () => {
 
 
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Caption</label>
+                                    <label className="company_label">Caption</label>
                                     <input
                                         className="company_input"
                                         type="text"
@@ -267,21 +260,6 @@ const AddCampaign = () => {
 
                                     {errors.caption && <p className="error">{errors.caption}</p>}
                                 </div>
-
-                                <div className="form-group ">
-                                    <label htmlFor="" className="company_label">Select Type</label>
-                                    <select
-                                        value={type}
-                                        onChange={(e) => setType(e.target.value)}
-                                        className="p-2 border rounded-md company_select"
-                                    >
-                                        <option value="" disabled>Select Type</option>
-                                        <option value="fixed">Fixed Amount</option>
-                                        <option value="variable">Per View</option>
-                                    </select>
-
-                                    {errors.type && <p className="error">{errors.type}</p>}
-                                </div>
                             </div>
                         )}
 
@@ -289,16 +267,15 @@ const AddCampaign = () => {
                             <div>
                                 <div className="flex w-full md:w-[60%] ">
                                     <div className="form-group ">
-                                        <label htmlFor="" className="company_label">Select Age</label>
+                                        <label className="company_label">Select Age</label>
                                         <select
                                             value={age}
                                             onChange={(e) => setAge(e.target.value)}
                                             className="p-2 border rounded-md company_select"
                                         >
-                                            <option value="" disabled>Select Age</option>
-                                            <option value="18-24">18-24</option>
-                                            <option value="25-40">25-40</option>
-                                            <option value="41-50">41-50</option>
+                                            <option value="">Select Age</option>
+                                            <option value="20-34">20-34</option>
+                                            <option value="35-50">35-50</option>
                                             <option value="51+">51+</option>
                                         </select>
 
@@ -306,14 +283,13 @@ const AddCampaign = () => {
                                     </div>
 
                                     <div className="form-group ml-5">
-                                        <label htmlFor="gender" className="company_label">Select Gender</label>
+                                        <label className="company_label">Select Gender</label>
                                         <select
-                                            id="gender"
                                             value={gender}
                                             onChange={(e) => setGender(e.target.value)}
                                             className="p-2 border rounded-md company_select"
                                         >
-                                            <option value="" disabled>Select Gender</option>
+                                            <option value="">Select Gender</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                             <option value="Other">Other</option>
@@ -324,10 +300,9 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="postalCode" className="company_label">Add Postal Code</label>
+                                    <label className="company_label">Add Postal Code</label>
                                     <input
-                                        type="text"
-                                        id="postalCode"
+                                        type="number"
                                         value={postalCode}
                                         onChange={(e) => setPostalCode(e.target.value)}
                                         placeholder="Enter Postal Code"
@@ -338,14 +313,13 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="radius" className="company_label">Select Radius</label>
+                                    <label className="company_label">Select Radius</label>
                                     <select
-                                        id="radius"
                                         value={radius}
                                         onChange={(e) => setRadius(e.target.value)}
                                         className="p-2 border rounded-md company_select"
                                     >
-                                        <option value="" disabled>Select Radius</option>
+                                        <option value="">Select Radius</option>
                                         <option value="5km">5 km</option>
                                         <option value="10km">10 km</option>
                                         <option value="15km">15 km</option>
@@ -361,24 +335,25 @@ const AddCampaign = () => {
                         {step == 3 && (
                             <div >
                                 <div className="flex w-full md:w-[60%]">
-                                <div className="form-group">
-                                        <label htmlFor="totalBudget" className="company_label">Total Budget</label>
-                                        <input
-                                            id="totalBudget"
-                                            value={totalBudget}
-                                            onChange={(e) => setTotalBudget(e.target.value)}
+                                    <div className="form-group">
+                                        <label className="company_label">Select Daily Budget</label>
+                                        <select
+                                            value={dailyBudget}
+                                            onChange={(e) => setDailyBudget(e.target.value)}
                                             className="p-2 border rounded-md company_select"
-                                        />
-
-
-                                        {errors.totalBudget && <p className="error">{errors.totalBudget}</p>}
+                                        >
+                                            <option value="">Select Daily Budget</option>
+                                            <option value="100$">100$</option>
+                                            <option value="200$">200$</option>
+                                            <option value="300$">300$</option>
+                                        </select>
+                                        {errors.dailyBudget && <p className="error">{errors.dailyBudget}</p>}
                                     </div>
 
                                     <div className="form-group ml-5">
-                                        <label htmlFor="budgetPerView" className="company_label">Budget Per View</label>
+                                        <label className="company_label">Budget Per View</label>
                                         <input
-                                            id="budgetPerView"
-                                            type="text"
+                                            type="number"
                                             step={.01}
                                             value={budgetPerView}
                                             onChange={(e) => setBudgetPerView(e.target.value)}
@@ -391,9 +366,8 @@ const AddCampaign = () => {
 
                                 <div className="flex w-full md:w-[60%]">
                                     <div className="form-group">
-                                        <label htmlFor="setAdDuration" className="company_label">Set Ad Duration</label>
+                                        <label className="company_label">Set Ad Duration</label>
                                         <ReactDatePicker
-                                            id="setAdDuration"
                                             selected={adStartDate}
                                             onChange={(date) => setAdStartDate(date)}
                                             dateFormat="MM/dd/yyyy"
@@ -405,9 +379,8 @@ const AddCampaign = () => {
                                     </div>
 
                                     <div className="form-group ml-5">
-                                        <label htmlFor="endAdDuration" className="company_label">End Ad Duration</label>
+                                        <label className="company_label">End Ad Duration</label>
                                         <ReactDatePicker
-                                            id="endAdDuration"
                                             selected={adEndDate}
                                             onChange={(date) => setAdEndDate(date)}
                                             dateFormat="MM/dd/yyyy"
@@ -430,6 +403,23 @@ const AddCampaign = () => {
                                     <div>Open End</div>
                                 </div>
 
+                                {/* Select Radius */}
+                                <div className="form-group">
+                                    <label className="company_label">Select Radius</label>
+                                    <select
+                                        value={radius2}
+                                        onChange={(e) => setRadius2(e.target.value)}
+                                        className="p-2 border rounded-md company_input h-[40px] w-full"
+                                    >
+                                        <option value="">Select Radius</option>
+                                        <option value="5km">5 km</option>
+                                        <option value="10km">10 km</option>
+                                        <option value="15km">15 km</option>
+                                        <option value="20km">20 km</option>
+                                    </select>
+
+                                    {errors.radius2 && <p className="error">{errors.radius2}</p>}
+                                </div>
                             </div>
                         )}
 
@@ -460,5 +450,5 @@ const AddCampaign = () => {
     )
 };
 
-export default AddCampaign;
+export default EditCampaign;
 
