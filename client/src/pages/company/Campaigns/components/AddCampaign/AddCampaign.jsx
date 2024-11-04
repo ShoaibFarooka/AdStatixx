@@ -121,7 +121,6 @@ const AddCampaign = () => {
                         radius: radius.toString(),
                     },
                     budget: {
-                        perViewBudget: cleanBudgetPerView,
                         totalBudget: cleantotalBudget,
                     },
                     duration: {
@@ -133,6 +132,10 @@ const AddCampaign = () => {
                     },
                     assets: images,
                 };
+
+                if (type === "variable") {
+                    newCampaignData.budget.perViewBudget = cleanBudgetPerView
+                }
 
                 const formData = new FormData()
 
@@ -386,7 +389,7 @@ const AddCampaign = () => {
                                         {errors.totalBudget && <p className="error">{errors.totalBudget}</p>}
                                     </div>
 
-                                   {type === "variable" &&  <div className="form-group ml-5">
+                                    {type === "variable" && <div className="form-group ml-5">
                                         <label htmlFor="budgetPerView" className="company_label">Budget Per View</label>
                                         <input
                                             id="budgetPerView"

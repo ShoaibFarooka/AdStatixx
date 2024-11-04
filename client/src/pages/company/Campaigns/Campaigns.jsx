@@ -8,6 +8,7 @@ import CampaignService from "../../../services/CampaignService";
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux';
 import { setSelectedCampaign } from '../../../redux/campaignSlice'; // adjust path as needed
+import { message } from "antd";
 
 const Campaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -63,9 +64,11 @@ const Campaigns = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await CampaignService.deleteCampaign(campaignId);
+                   const response= await CampaignService.deleteCampaign(campaignId);
                     setCampaigns((prev) => prev.filter((campaign) => campaign._id !== campaignId));
+                    message.success(response.message)
                 } catch (error) {
+                    message.error(error.response?.data?.error || "Cancel")
                     console.error("Error deleting campaign:", error);
                     Swal.fire("Error!", "Failed to delete the campaign.", "error");
                 }
