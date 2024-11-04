@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
 const AddCampaign = () => {
+
     const [campaignName, setCampaignName] = useState('');
     const [description, setDescription] = useState('');
     const [caption, setCaption] = useState('');
@@ -19,6 +20,7 @@ const AddCampaign = () => {
     const [postalCode, setPostalCode] = useState('');
     const [radius, setRadius] = useState('');
     const [totalBudget, setTotalBudget] = useState('');
+    const [minimumViews, setMinimumViews] = useState('');
     const [budgetPerView, setBudgetPerView] = useState('');
     const [adStartDate, setAdStartDate] = useState(null);
     const [adEndDate, setAdEndDate] = useState(null);
@@ -75,13 +77,19 @@ const AddCampaign = () => {
         // Step 3 validation
         if (!totalBudget) {
             newErrors.totalBudget = "Total Budget is required";
-        } else if (!/^\d+$/.test(totalBudget)) {
             newErrors.totalBudget = "Total Budget must be a number";
         }
-        if (!budgetPerView) {
+
+        if (!budgetPerView && type === "variable") {
             newErrors.budgetPerView = "Budget per view is required";
-        } else if (!/^\d+$/.test(budgetPerView)) {
+        } else if (!/^\d+$/.test(budgetPerView) && type === "variable") {
             newErrors.budgetPerView = "Budget per view must be a number";
+        }
+
+        if (!minimumViews && type === "fixed") {
+            newErrors.minimumViews = "Minimum Views is required";
+        } else if (!/^\d+$/.test(minimumViews) && type === "fixed") {
+            newErrors.minimumViews = "Minimum Views must be a number";
         }
 
         if (!openEnd) {  // Only validate dates if not open-ended
@@ -113,16 +121,15 @@ const AddCampaign = () => {
                         radius: radius.toString(),
                     },
                     budget: {
-                        daliyBudget: cleantotalBudget,
                         perViewBudget: cleanBudgetPerView,
-                        totalBudget: cleantotalBudget * 30,
+                        totalBudget: cleantotalBudget,
                     },
                     duration: {
                         startDate: formattedStartDate,
                         endDate: formattedEndDate,
                     },
                     acceptanceCriteria: {
-                        minimumViews: 500,
+                        minimumViews: minimumViews,
                     },
                     assets: images,
                 };
@@ -185,8 +192,9 @@ const AddCampaign = () => {
                         {step == 1 && (
                             <div>
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Campaign Name</label>
+                                    <label htmlFor="name" className="company_label">Campaign Name</label>
                                     <input
+                                        id="name"
                                         className="company_input"
                                         type="text"
                                         value={campaignName}
@@ -256,8 +264,9 @@ const AddCampaign = () => {
 
 
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Caption</label>
+                                    <label htmlFor="caption" className="company_label">Caption</label>
                                     <input
+                                        id="caption"
                                         className="company_input"
                                         type="text"
                                         value={caption}
@@ -269,8 +278,9 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group ">
-                                    <label htmlFor="" className="company_label">Select Type</label>
+                                    <label htmlFor="type" className="company_label">Select Type</label>
                                     <select
+                                        id="type"
                                         value={type}
                                         onChange={(e) => setType(e.target.value)}
                                         className="p-2 border rounded-md company_select"
@@ -289,8 +299,9 @@ const AddCampaign = () => {
                             <div>
                                 <div className="flex w-full md:w-[60%] ">
                                     <div className="form-group ">
-                                        <label htmlFor="" className="company_label">Select Age</label>
+                                        <label htmlFor="age" className="company_label">Select Age</label>
                                         <select
+                                            id="age"
                                             value={age}
                                             onChange={(e) => setAge(e.target.value)}
                                             className="p-2 border rounded-md company_select"
@@ -361,9 +372,10 @@ const AddCampaign = () => {
                         {step == 3 && (
                             <div >
                                 <div className="flex w-full md:w-[60%]">
-                                <div className="form-group">
+                                    <div className="form-group">
                                         <label htmlFor="totalBudget" className="company_label">Total Budget</label>
                                         <input
+                                            placeholder="Total Budget"
                                             id="totalBudget"
                                             value={totalBudget}
                                             onChange={(e) => setTotalBudget(e.target.value)}
@@ -374,7 +386,7 @@ const AddCampaign = () => {
                                         {errors.totalBudget && <p className="error">{errors.totalBudget}</p>}
                                     </div>
 
-                                    <div className="form-group ml-5">
+                                   {type === "variable" &&  <div className="form-group ml-5">
                                         <label htmlFor="budgetPerView" className="company_label">Budget Per View</label>
                                         <input
                                             id="budgetPerView"
@@ -386,7 +398,21 @@ const AddCampaign = () => {
                                             className="p-2 border rounded-md company_select h-[40px]"
                                         />
                                         {errors.budgetPerView && <p className="error">{errors.budgetPerView}</p>}
-                                    </div>
+                                    </div>}
+
+                                    {type !== "variable" && <div className="form-group ml-5">
+                                        <label htmlFor="minimumViews" className="company_label">Minimum Views</label>
+                                        <input
+                                            id="minimumViews"
+                                            type="text"
+                                            step={.01}
+                                            value={minimumViews}
+                                            onChange={(e) => setMinimumViews(e.target.value)}
+                                            placeholder="Minimum Views"
+                                            className="p-2 border rounded-md company_select h-[40px]"
+                                        />
+                                        {errors.budgetPerView && <p className="error">{errors.budgetPerView}</p>}
+                                    </div>}
                                 </div>
 
                                 <div className="flex w-full md:w-[60%]">
@@ -407,6 +433,7 @@ const AddCampaign = () => {
                                     <div className="form-group ml-5">
                                         <label htmlFor="endAdDuration" className="company_label">End Ad Duration</label>
                                         <ReactDatePicker
+                                            disabled={openEnd}
                                             id="endAdDuration"
                                             selected={adEndDate}
                                             onChange={(date) => setAdEndDate(date)}
@@ -424,7 +451,7 @@ const AddCampaign = () => {
                                     <input
                                         type="checkbox"
                                         checked={openEnd}
-                                        onChange={(e) => setOpenEnd(e.target.checked)}
+                                        onChange={(e) => { setOpenEnd(e.target.checked); setAdEndDate(null) }}
                                         className="mr-2 cursor-pointer company_input h-[40px]"
                                     />
                                     <div>Open End</div>

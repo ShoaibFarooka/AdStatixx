@@ -96,7 +96,7 @@ const Campaigns = () => {
                             <tr className="campaign_tr">
                                 <th className="campaign_th">Pause/Start</th>
                                 <th className="campaign_th">Campaign Name</th>
-                                <th className="campaign_th">Daily Budget</th>
+                                <th className="campaign_th">Total Budget</th>
                                 <th className="campaign_th">Duration</th>
                                 <th className="campaign_th">Views</th>
                                 <th className="campaign_th">Action</th>
@@ -123,7 +123,7 @@ const Campaigns = () => {
                                             </label>
                                         </td>
                                         <td className="campaign_td">{campaign.info.name}</td>
-                                        <td className="campaign_td">{campaign.budget.daliyBudget}$</td>
+                                        <td className="campaign_td">{campaign.budget.totalBudget}$</td>
                                         <td className="campaign_td">
                                             {campaign.duration.startDate} - {campaign.duration.endDate}
                                         </td>

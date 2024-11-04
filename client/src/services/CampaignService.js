@@ -33,7 +33,11 @@ const CampaignService = {
     },
     updateCampaign: async (userId, payload) => {
         try {
-            const response = await axiosInstance.patch(`${BASE_URL}/update-campaign/${userId}`, payload);
+            const response = await axiosInstance.patch(`${BASE_URL}/update-campaign/${userId}`, payload,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             return response.data;
         } catch (error) {
             throw error;
