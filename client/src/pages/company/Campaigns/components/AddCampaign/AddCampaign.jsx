@@ -8,6 +8,8 @@ import CampaignService from "../../../../../services/CampaignService";
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
+import { ShowLoading, HideLoading } from "../../../../../redux/loaderSlice";
 
 const AddCampaign = () => {
 
@@ -27,8 +29,9 @@ const AddCampaign = () => {
     const [openEnd, setOpenEnd] = useState(false);
     const [errors, setErrors] = useState({});
     const [images, setImages] = useState([]); // Store multiple images
-    const [type, setType] = useState("")
-    const navigate = useNavigate()
+    const [type, setType] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleImageUpload = (e) => {
         const selectedFiles = Array.from(e.target.files); // Convert FileList to array
@@ -45,7 +48,6 @@ const AddCampaign = () => {
         if (step === 1) {
             if (!campaignName) newErrors.campaignName = "Campaign name is required";
             if (!description) newErrors.description = "Description is required";
-            // if (images.length === 0) newErrors.image = "Image is required";
             if (!caption) newErrors.caption = "Caption is required";
             if (!type) newErrors.type = "Type is required";
             if (images.length <= 0) newErrors.images = "Assets are required";
@@ -82,7 +84,7 @@ const AddCampaign = () => {
 
         if (!budgetPerView && type === "variable") {
             newErrors.budgetPerView = "Budget per view is required";
-        } else if (!/^\d+$/.test(budgetPerView) && type === "variable") {
+        } else if (!/^\d+(\.\d+)?$/.test(budgetPerView) && type === "variable") {
             newErrors.budgetPerView = "Budget per view must be a number";
         }
 
@@ -92,8 +94,8 @@ const AddCampaign = () => {
             newErrors.minimumViews = "Minimum Views must be a number";
         }
 
+        if (!adStartDate) newErrors.adStartDate = "Start date is required";
         if (!openEnd) {  // Only validate dates if not open-ended
-            if (!adStartDate) newErrors.adStartDate = "Start date is required";
             if (!adEndDate) newErrors.adEndDate = "End date is required";
         }
 
@@ -105,7 +107,7 @@ const AddCampaign = () => {
                 const cleanBudgetPerView = parseFloat(budgetPerView);
 
                 const formattedStartDate = format(adStartDate, 'yyyy-MM-dd');
-                const formattedEndDate = format(adEndDate, 'yyyy-MM-dd');
+                const formattedEndDate = adEndDate ? format(adEndDate, 'yyyy-MM-dd') : "";
 
                 const newCampaignData = {
                     info: {
@@ -128,13 +130,14 @@ const AddCampaign = () => {
                         endDate: formattedEndDate,
                     },
                     acceptanceCriteria: {
-                        minimumViews: minimumViews,
                     },
                     assets: images,
                 };
 
                 if (type === "variable") {
                     newCampaignData.budget.perViewBudget = cleanBudgetPerView
+                } else {
+                    newCampaignData.acceptanceCriteria.minimumViews = minimumViews;
                 }
 
                 const formData = new FormData()
@@ -148,15 +151,15 @@ const AddCampaign = () => {
                 images.forEach((file, index) => {
                     formData.append(`assets`, file);
                 });
-
+                dispatch(ShowLoading());
                 const response = await CampaignService.createCampaign(formData);
-                console.log("Campaign added successfully:", response);
                 message.success(response?.message)
                 navigate("/company/campaigns")
             } catch (error) {
                 console.error("Error adding campaign:", error);
-                message.error(error.response?.data?.error || "Failed to create campaign. Please try again.")
-
+                message.error(error.response?.data?.error || "Failed to create campaign. Please try again.");
+            } finally {
+                dispatch(HideLoading());
             }
         }
     };
@@ -164,7 +167,7 @@ const AddCampaign = () => {
     return (
         <>
 
-            <div className="main_table p-5 md:p-[50px]">
+            <div className="campaigns main_table p-5 md:p-[50px]">
                 <div className="heading">
                     <img src={plan} alt="plan" />
 
@@ -208,8 +211,9 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="" className="company_label">Description</label>
+                                    <label htmlFor="description" className="company_label">Description</label>
                                     <textarea
+                                        id="description"
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         placeholder="Enter description"
@@ -219,7 +223,7 @@ const AddCampaign = () => {
                                 </div>
 
                                 <div className="form-group relative">
-                                    <label htmlFor="" className="company_label">Campaign Image or Video</label>
+                                    <label htmlFor="upload-button" className="company_label">Campaign Image or Video</label>
 
                                     {/* Hidden file input */}
                                     <input

@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import CampaignService from "../../../services/CampaignService";
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux';
-import { setSelectedCampaign } from '../../../redux/campaignSlice'; // adjust path as needed
+import { setSelectedCampaign } from '../../../redux/campaignSlice';
+import { ShowLoading, HideLoading } from "../../../redux/loaderSlice";
 import { message } from "antd";
 
 const Campaigns = () => {
@@ -16,12 +17,13 @@ const Campaigns = () => {
     const dispatch = useDispatch();
 
     const handleEditClick = (campaign) => {
-        dispatch(setSelectedCampaign(campaign)); 
-        navigate('/company/campaigns/edit-campaign'); 
+        dispatch(setSelectedCampaign(campaign));
+        navigate('/company/campaigns/edit-campaign');
     };
 
     useEffect(() => {
         const fetchCampaigns = async () => {
+            dispatch(ShowLoading());
             try {
                 const response = await CampaignService.getCampaign();
                 if (response.campaigns) {
@@ -31,6 +33,8 @@ const Campaigns = () => {
                 }
             } catch (error) {
                 console.error("Error fetching campaigns:", error);
+            } finally {
+                dispatch(HideLoading());
             }
         };
 
@@ -40,16 +44,20 @@ const Campaigns = () => {
     const toggleCampaign = async (index) => {
         const campaignToToggle = campaigns[index];
         const updatedStatus = campaignToToggle.status === "active" ? "paused" : "active";
-
+        dispatch(ShowLoading());
         try {
-            await CampaignService.updateCampaignStatus(campaignToToggle._id, { status: updatedStatus });
+            const response = await CampaignService.updateCampaignStatus(campaignToToggle._id, { status: updatedStatus });
             setCampaigns((prev) =>
                 prev.map((campaign, i) =>
                     i === index ? { ...campaign, status: updatedStatus } : campaign
                 )
             );
+            message.success(response?.message)
         } catch (error) {
             console.error("Error updating campaign status:", error);
+            message.error(error.response?.data?.error || "Failed to update campaign status. Please try again.")
+        } finally {
+            dispatch(HideLoading());
         }
     };
 
@@ -64,7 +72,7 @@ const Campaigns = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                   const response= await CampaignService.deleteCampaign(campaignId);
+                    const response = await CampaignService.deleteCampaign(campaignId);
                     setCampaigns((prev) => prev.filter((campaign) => campaign._id !== campaignId));
                     message.success(response.message)
                 } catch (error) {

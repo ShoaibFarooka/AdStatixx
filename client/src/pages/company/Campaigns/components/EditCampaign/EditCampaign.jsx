@@ -9,19 +9,19 @@ import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { ShowLoading, HideLoading } from "../../../../../redux/loaderSlice";
 
 const EditCampaign = () => {
     const selectedCampaign = useSelector((state) => state.campaign.selectedCampaign);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-       if(!selectedCampaign){
+        if (!selectedCampaign) {
             navigate("/company/campaigns")
-            console.log(" bilal")
-      }
+        }
     }, [selectedCampaign])
-
-    console.log(selectedCampaign, "selectedCampaign")
 
     const fileNames = selectedCampaign?.assets
         ? selectedCampaign.assets.map(asset => ({ name: asset.split("\\").pop() }))
@@ -36,6 +36,7 @@ const EditCampaign = () => {
     const [postalCode, setPostalCode] = useState(selectedCampaign?.filters?.postalCode ? selectedCampaign?.filters?.postalCode : "");
     const [radius, setRadius] = useState(selectedCampaign?.filters?.radius ? selectedCampaign?.filters?.radius : "");
     const [totalBudget, setTotalBudget] = useState(selectedCampaign?.budget?.totalBudget ? selectedCampaign?.budget?.totalBudget : '');
+    const [minimumViews, setMinimumViews] = useState(selectedCampaign?.acceptanceCriteria?.minimumViews || "");
     const [budgetPerView, setBudgetPerView] = useState(selectedCampaign?.budget?.perViewBudget ? selectedCampaign?.budget?.perViewBudget : '');
     const [adStartDate, setAdStartDate] = useState(selectedCampaign?.duration?.startDate ? selectedCampaign?.duration?.startDate : null);
     const [adEndDate, setAdEndDate] = useState(selectedCampaign?.duration?.endDate ? selectedCampaign?.duration?.endDate : null);
@@ -96,14 +97,20 @@ const EditCampaign = () => {
         } else if (!/^\d+$/.test(totalBudget)) {
             newErrors.totalBudget = "Total Budget must be a number";
         }
-        if (!budgetPerView) {
+        if (!budgetPerView && type === "variable") {
             newErrors.budgetPerView = "Budget per view is required";
-        } else if (!/^\d+$/.test(budgetPerView)) {
+        } else if (!/^\d+(\.\d+)?$/.test(budgetPerView) && type === "variable") {
             newErrors.budgetPerView = "Budget per view must be a number";
         }
 
+        if (!minimumViews && type === "fixed") {
+            newErrors.minimumViews = "Minimum Views is required";
+        } else if (!/^\d+$/.test(minimumViews) && type === "fixed") {
+            newErrors.minimumViews = "Minimum Views must be a number";
+        }
+
+        if (!adStartDate) newErrors.adStartDate = "Start date is required";
         if (!openEnd) {  // Only validate dates if not open-ended
-            if (!adStartDate) newErrors.adStartDate = "Start date is required";
             if (!adEndDate) newErrors.adEndDate = "End date is required";
         }
 
@@ -120,7 +127,7 @@ const EditCampaign = () => {
                     : parseFloat(budgetPerView);
 
                 const formattedStartDate = format(adStartDate, 'yyyy-MM-dd');
-                const formattedEndDate = format(adEndDate, 'yyyy-MM-dd');
+                const formattedEndDate = adEndDate ? format(adEndDate, 'yyyy-MM-dd') : "";
 
                 const newCampaignData = {
                     info: {
@@ -136,7 +143,6 @@ const EditCampaign = () => {
                         radius: radius.toString(),
                     },
                     budget: {
-                        perViewBudget: cleanBudgetPerView,
                         totalBudget: cleantotalBudget,
                     },
                     duration: {
@@ -144,10 +150,15 @@ const EditCampaign = () => {
                         endDate: formattedEndDate,
                     },
                     acceptanceCriteria: {
-                        minimumViews: 500,
                     },
                     assets: images,
                 };
+
+                if (type === "variable") {
+                    newCampaignData.budget.perViewBudget = cleanBudgetPerView
+                } else {
+                    newCampaignData.acceptanceCriteria.minimumViews = minimumViews;
+                }
 
                 const formData = new FormData()
 
@@ -156,37 +167,35 @@ const EditCampaign = () => {
                 formData.append("budget", JSON.stringify(newCampaignData.budget))
                 formData.append("duration", JSON.stringify(newCampaignData.duration))
                 formData.append("acceptanceCriteria", JSON.stringify(newCampaignData.acceptanceCriteria))
-                console.log(images, "form img")
                 images.forEach((file, index) => {
                     formData.append(`assets`, file);
                 });
 
                 console.log(newCampaignData, "payload")
-
+                dispatch(ShowLoading());
                 if (selectedCampaign?.info?.name) {
                     const response = await CampaignService.updateCampaign(selectedCampaign._id, formData);
-                    console.log("Campaign added successfully:", response);
-                    message.success(response?.message)
-                    navigate("/company/campaigns")
+                    message.success(response?.message);
+                    navigate("/company/campaigns");
                 } else {
                     const response = await CampaignService.createCampaign(formData);
-                    console.log("Campaign added successfully:", response);
-                    message.success(response?.message)
-                    navigate("/company/campaigns")
+                    message.success(response?.message);
+                    navigate("/company/campaigns");
                 }
 
             } catch (error) {
                 console.error("Error adding campaign:", error);
-                message.error(error.response?.data?.error || "Failed to create campaign. Please try again.")
-
+                message.error(error.response?.data?.error || "Failed to create campaign. Please try again.");
+            } finally {
+                dispatch(HideLoading());
             }
         }
     };
 
-    return (selectedCampaign &&(
+    return (selectedCampaign && (
         <>
 
-            <div className="main_table p-5 md:p-[50px]">
+            <div className="campaigns main_table p-5 md:p-[50px]">
                 <div className="heading">
                     <img src={plan} alt="plan" />
 
@@ -421,7 +430,7 @@ const EditCampaign = () => {
                                         {errors.totalBudget && <p className="error">{errors.totalBudget}</p>}
                                     </div>
 
-                                    <div className="form-group ml-5">
+                                    {type === "variable" && <div className="form-group ml-5">
                                         <label htmlFor="budgetPerView" className="company_label">Budget Per View</label>
                                         <input
                                             id="budgetPerView"
@@ -433,7 +442,21 @@ const EditCampaign = () => {
                                             className="p-2 border rounded-md company_select h-[40px]"
                                         />
                                         {errors.budgetPerView && <p className="error">{errors.budgetPerView}</p>}
-                                    </div>
+                                    </div>}
+
+                                    {type !== "variable" && <div className="form-group ml-5">
+                                        <label htmlFor="minimumViews" className="company_label">Minimum Views</label>
+                                        <input
+                                            id="minimumViews"
+                                            type="text"
+                                            step={.01}
+                                            value={minimumViews}
+                                            onChange={(e) => setMinimumViews(e.target.value)}
+                                            placeholder="Minimum Views"
+                                            className="p-2 border rounded-md company_select h-[40px]"
+                                        />
+                                        {errors.budgetPerView && <p className="error">{errors.budgetPerView}</p>}
+                                    </div>}
                                 </div>
 
                                 <div className="flex w-full md:w-[60%]">
