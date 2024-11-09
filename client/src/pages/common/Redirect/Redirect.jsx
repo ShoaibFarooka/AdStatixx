@@ -10,7 +10,7 @@ const Redirect = () => {
     } else if (user.role === 'company') {
         return <Navigate to="/company/dashboard" />;
     } else if (user.role === 'user') {
-        return <Navigate to="/billing" />;
+        return <Navigate to="/user/campaigns" />;
     }
 };
 

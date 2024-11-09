@@ -1,0 +1,59 @@
+import React from 'react';
+import logo from '../../../assets/images/campaign.svg'
+
+const CampaignCard = () => {
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(' ');
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+  };
+
+  const description = "Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.  ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.";
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 max-w-[332px]  mx-auto relative">
+      <span className="text-[#6AB541] bg-[#F0F8EC] text-[13px] font-bold px-[17px] py-[7px] rounded-[5px] absolute top-4 right-4">Active</span>
+
+      <div className="flex items-center">
+        <img src={logo} alt="Logo" className="w-[61px] h-[61px] rounded-full mr-[14.6px]" />
+        <div>
+          <h3 className="text-sm font-semibold">Campaign Name</h3>
+        </div>
+      </div>
+
+     <p className="text-[13px] font-medium mt-[17px] leading-4 h-[79px]">
+        {truncateText(description, 35)}
+      </p>
+
+      <div className="flex mt-[21px] text-center">
+        <div className='mr-6'>
+          <p className="font-semibold text-sm ">Remaining Budget</p>
+          <p className="w-[117px] h-[30px] rounded-[5px] bg-[#F8F8F8] flex justify-center items-center font-normal text-[13px] mt-2">$200</p>
+        </div>
+        <div>
+          <p className="font-semibold text-sm ">Budget Per View</p>
+          <p className="w-[117px] h-[30px] rounded-[5px] bg-[#F8F8F8] flex justify-center items-center font-normal text-[13px] mt-2">$50</p>
+        </div>
+      </div>
+
+      <button className="bg-[#6AB541] text-white font-bold w-full py-2 mt-4 mb-4 rounded-lg hover:bg-[#72c446] transition duration-300">
+        View More
+      </button>
+    </div>
+  );
+};
+
+const CampaignGrid = () => {
+  const campaigns = Array(6).fill({
+    description: "Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+  });
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:p-4">
+      {campaigns.map((campaign, index) => (
+        <CampaignCard key={index} description={campaign.description} />
+      ))}
+    </div>
+  );
+};
+
+export default CampaignGrid;

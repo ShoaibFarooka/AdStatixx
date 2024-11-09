@@ -9,6 +9,8 @@ import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
 import Verify from '../pages/common/VerifyOTP/Verify.jsx';
 import EditCampaign from '../pages/company/Campaigns/components/EditCampaign/EditCampaign.jsx';
+import AllCampaigns from '../pages/user/allCampaigns/AllCampaigns.jsx';
+import MyCampaigns from '../pages/user/myCampaigns/MyCampaigns.jsx';
 
 const routes = [
   //user
@@ -21,6 +23,10 @@ const routes = [
   // { path: "/success", element: <Success />, protected: true, showSidebar: false },
   // { path: "/settings", element: <Settings />, protected: true, showSidebar: true },
   // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
+
+  { path: "/user/campaigns", element: <AllCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/user/my-campaigns", element: <MyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+
 
   //company
   { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },

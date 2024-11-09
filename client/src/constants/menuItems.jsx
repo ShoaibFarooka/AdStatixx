@@ -35,6 +35,8 @@ export const menuItems = {
         // { path: '/company/employee/settings', label: 'Settings', icon: <SettingsIcon />, disabled: false },
     ],
     user: [
+        { path: '/user/campaigns', label: 'Campaigns', icon: <DashboardIcon />, disabled: false },
+        { path: '/user/my-campaigns', label: 'My Campaigns', icon: <CampaignsIcon />, disabled: false },
         // { path: '/billing', label: 'Billing', icon: <BillingIcon />, disabled: false },
         // { path: '/plans', label: 'Plans', icon: <ProductsIcon />, disabled: false },
         // { path: '/notifications', label: 'Notifications', icon: <NotificationsIcon />, disabled: true },
