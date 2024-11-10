@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../../../assets/images/campaign.svg'
 import plan from "../../../assets/images/company.svg"
 import back from "../../../assets/icons/back.svg"
@@ -17,6 +17,7 @@ const CampaignCard = ({ setSeeViewMore }) => {
 
       <div className="flex items-center">
         <img src={logo} alt="Logo" className="w-[61px] h-[61px] rounded-full mr-[14.6px]" />
+
         <div>
           <h3 className="text-sm font-semibold">Campaign Name</h3>
         </div>
@@ -51,6 +52,34 @@ const CampaignGrid = () => {
 
   const [seeViewMore, setSeeViewMore] = useState(true)
 
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+  });
+
+  useEffect(() => {
+    const targetDate = new Date("2024-12-31T23:59:59"); // Set your target date here
+
+    const countdown = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(countdown);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+      } else {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / (1000 * 60)) % 60),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(countdown);
+  }, []);
+
   return (
     <>
       {seeViewMore ? <>
@@ -72,8 +101,11 @@ const CampaignGrid = () => {
           <span className='text-xl font-bold'>Back</span>
         </div>
 
-        <div className='pt-[61px] pl-[48px] pr-[36px] pb-[48px] bg-white rounded-2xl'>
-          <div className='flex'>
+        <div className='pt-[61px] pl-[48px] pr-[36px] pb-[48px] bg-white rounded-2xl relative'>
+
+          <span className="text-[#6AB541] bg-[#F0F8EC] text-[13px] font-bold px-[17px] py-[7px] rounded-[5px] absolute top-8 right-10">Active</span>
+
+          <div className='flex relative'>
             <div>
               <img src={logo} alt="back" className='mr-9 w-[141px] h-[141px] rounded-full' />
             </div>
@@ -104,9 +136,22 @@ const CampaignGrid = () => {
                   Download Assets
                 </button>
               </div>
+
+              <div className="flex flex-col items-center space-y-2 absolute right-0 bottom-2">
+                <div className="flex space-x-8 text-gray-600 text-sm font-bold">
+                  <span>Days</span>
+                  <span>Hours</span>
+                  <span>Minutes</span>
+                </div>
+                <div className="flex space-x-4 text-gray-400 text-3xl font-semibold">
+                  <span>{String(timeLeft.days).padStart(2, '0')}</span>
+                  <span>:</span>
+                  <span>{String(timeLeft.hours).padStart(2, '0')}</span>
+                  <span>:</span>
+                  <span>{String(timeLeft.minutes).padStart(2, '0')}</span>
+                </div>
+              </div>
             </div>
-
-
           </div>
         </div>
       </>
