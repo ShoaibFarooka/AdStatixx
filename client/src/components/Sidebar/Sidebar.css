@@ -1,6 +1,7 @@
 .sidebar-wrapper {
     display: flex;
     flex-direction: column;
+    z-index: +999;
 }
 
 .sidebar-wrapper .hamburger-container {
@@ -19,6 +20,7 @@
     box-shadow: 6px 0 5px -5px rgba(0, 0, 0, 0.25);
     padding-bottom: 30px;
     box-sizing: border-box;
+    background-color: #6AB541;
 }
 
 .sidebar .hamburger-close-container {
@@ -45,15 +47,20 @@
 }
 
 .sidebar .menu .item {
-    width: 100%;
+    width: 162px;
+    margin: auto;
 }
 
 .sidebar .menu .active-item {
-    background-color: var(--accent-color-1);
+    background-color: #76BB50;
+    border-radius: 13px;
+
 }
 
 .sidebar .menu .non-active-item:hover {
-    background-color: aliceblue;
+    background-color:#76BB50;
+    border-radius: 13px;
+
 }
 
 .sidebar .menu .item-link {
@@ -61,15 +68,19 @@
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    padding: 5px 0 4px 0;
-    padding-left: 12.5%;
     box-sizing: border-box;
+    height: 51.8px;
+    padding: 16px 13.23px 16px 13.23px;
+    border-radius: 13px;
 }
 
 .sidebar .menu .item-label {
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--secondary-color-3);
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-family: Urbanist;
+    line-height: 13.23px;
+
 }
 
 .sidebar .menu .disabled-label {
@@ -80,14 +91,14 @@
     .sidebar-wrapper .hamburger-container {
         position: fixed;
         width: 100%;
-        background-color: aliceblue;
+        background-color: #6AB541;
         display: flex;
         align-items: center;
         padding: 10px 15px;
     }
 
     .sidebar {
-        background-color: aliceblue;
+        background-color: #6AB541;
         z-index: 1;
         transition: width 0.4s ease, opacity 0.4s ease;
     }
@@ -101,6 +112,8 @@
     .sidebar-opened {
         width: 250px;
         opacity: 1;
+        z-index: +11;
+        background-color: #6AB541;
     }
 
     .sidebar .hamburger-close-container {

@@ -54,10 +54,6 @@ const campaignSchema = new mongoose.Schema(
             },
         },
         budget: {
-            daliyBudget: {
-                type: Number,
-                default: null
-            },
             perViewBudget: {
                 type: Number,
                 default: null

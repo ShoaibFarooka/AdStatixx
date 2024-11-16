@@ -24,7 +24,7 @@ const verifyAuthorization = (role) => {
     }
     const allowedPages = menuItems[role]?.map(item => item.path) || [];
 
-    return allowedPages.includes(currentPath);
+    return allowedPages.some(page => currentPath.startsWith(page));
 };
 
 export { isAuthenticated, verifyAuthorization };

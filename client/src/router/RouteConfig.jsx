@@ -4,8 +4,13 @@ import ForgotPassword from '../pages/common/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from '../pages/common/ResetPassword/ResetPassword.jsx';
 import CompanyDashboard from '../pages/company/Dashboard/Dashboard.jsx';
 import CompanyCampaigns from '../pages/company/Campaigns/Campaigns.jsx';
+import AddCampaigns from '../pages/company/Campaigns/components/AddCampaign/AddCampaign.jsx';
 import Redirect from '../pages/common/Redirect/Redirect.jsx';
 import NotFound from '../pages/common/NotFound/NotFound.jsx';
+import Verify from '../pages/common/VerifyOTP/Verify.jsx';
+import EditCampaign from '../pages/company/Campaigns/components/EditCampaign/EditCampaign.jsx';
+import AllCampaigns from '../pages/user/allCampaigns/AllCampaigns.jsx';
+import MyCampaigns from '../pages/user/myCampaigns/MyCampaigns.jsx';
 
 const routes = [
   //user
@@ -19,9 +24,15 @@ const routes = [
   // { path: "/settings", element: <Settings />, protected: true, showSidebar: true },
   // { path: "/", element: <Redirect />, protected: true, showSidebar: true },
 
+  { path: "/user/campaigns", element: <AllCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/user/my-campaigns", element: <MyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+
+
   //company
   { path: "/company/dashboard", element: <CompanyDashboard />, protected: true, authRedirect: false, showSidebar: true },
   { path: "/company/campaigns", element: <CompanyCampaigns />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns/edit-campaign", element: <EditCampaign />, protected: true, authRedirect: false, showSidebar: true },
+  { path: "/company/campaigns/add-campaign", element: <AddCampaigns />, protected: true, authRedirect: false, showSidebar: true },
   // { path: "/company", element: <Redirect />, protected: true, showSidebar: true },
 
   //admin
@@ -34,6 +45,7 @@ const routes = [
   { path: "/", element: <Redirect />, protected: true, authRedirect: false, showSidebar: false },
   { path: "/login", element: <Login />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/register", element: <Register />, protected: false, authRedirect: true, showSidebar: false },
+  { path: "/verify-otp", element: <Verify />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/forgot-password", element: <ForgotPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "/reset-password", element: <ResetPassword />, protected: false, authRedirect: true, showSidebar: false },
   { path: "*", element: <NotFound />, protected: false, showSidebar: false },

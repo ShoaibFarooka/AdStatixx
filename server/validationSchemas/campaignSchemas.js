@@ -33,18 +33,17 @@ const filtersSchema = yup.object().shape({
 }).transform(parseJSON).noUnknown(true, 'Unknown field in filters object');
 
 const budgetSchema = yup.object().shape({
-    daliyBudget: yup.number().required('Daliy budget is required').positive('Daliy budget must be positive'),
-    perViewBudget: yup.number().required('Per view budget is required').positive('Per view budget must be positive'),
+    perViewBudget: yup.number(),
     totalBudget: yup.number().required('Total budget is required').positive('Total budget must be positive'),
 }).transform(parseJSON).noUnknown(true, 'Unknown field in budget object');
 
 const durationSchema = yup.object().shape({
     startDate: yup.string().trim().required('Start date is required'),
-    endDate: yup.string().trim().required('End date is required'),
+    endDate: yup.string().trim()
 }).transform(parseJSON).noUnknown(true, 'Unknown field in duration object');
 
 const acceptanceCriteriaSchema = yup.object().shape({
-    minimumViews: yup.number().required('Minimum views is required').positive('Minimum views must be positive'),
+    minimumViews: yup.number(),
 }).transform(parseJSON).noUnknown(true, 'Unknown field in acceptance criteria object');
 
 const createAndUpdateCampaignSchema = yup.object().shape({
@@ -54,6 +53,8 @@ const createAndUpdateCampaignSchema = yup.object().shape({
     duration: durationSchema.required('Duration object is required'),
     acceptanceCriteria: acceptanceCriteriaSchema.required('Acceptance criteria object is required'),
 });
+
+
 
 const updateCampaignStatusSchema = yup.object().shape({
     status: yup.string().trim().required('Status is required').oneOf(['active', 'paused'], 'Invalid status type'),

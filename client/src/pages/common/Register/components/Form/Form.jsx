@@ -147,7 +147,7 @@ const Form = ({ type }) => {
         try {
             const response = await userService.registerUser(formattedData, type);
             message.success(response?.message);
-            navigate('/login');
+            navigate('/verify-otp');
         } catch (error) {
             message.error(error.response.data?.error);
         } finally {
@@ -262,7 +262,7 @@ const Form = ({ type }) => {
                     </div>
                     <div className='input-container'>
                         <label htmlFor='password' className='label'>Password</label>
-                        <div className='pass-container'>
+                        <div className='pass-container relative'>
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 name='password'
@@ -272,9 +272,9 @@ const Form = ({ type }) => {
                                 onChange={handleChange}
                             />
                             {!showPassword ?
-                                <TbEye size={18} className='eye-icon' onClick={togglePasswordView} />
+                                <TbEye size={18} className='eye-icon absolute top-0' onClick={togglePasswordView} />
                                 :
-                                <TbEyeOff size={18} className='eye-icon' onClick={togglePasswordView} />
+                                <TbEyeOff size={18} className='eye-icon absolute top-0' onClick={togglePasswordView} />
                             }
                         </div>
                         {error.password && <div className='error'>{error.password}</div>}

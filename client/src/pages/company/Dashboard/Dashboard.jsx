@@ -1,9 +1,9 @@
-const Dashboard = () => {
-    return (
-        <div className="">
-            Dashboard
-        </div>
-    )
-};
+import React from 'react'
 
-export default Dashboard;
+const Dashboard = () => {
+  return (
+    <div>Dashboard</div>
+  )
+}
+
+export default Dashboard
